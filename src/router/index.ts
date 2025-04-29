@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { routesP1 } from './p1'
+import { routes_xyt } from './xyt'
 
 const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -17,7 +17,7 @@ const router = createRouter({
             path: '/home',
             redirect: '/',
         },
-        ...routesP1,
+        ...routes_xyt,
     ]
 })
 

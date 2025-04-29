@@ -1,0 +1,42 @@
+<template>
+    <div class="container">
+        <!-- 顶部全局组件 -->
+        <HospitalTop />
+        <!-- 中间内容 -->
+        <div class="content">
+            <!-- 轮播图 -->
+            <Carousel />
+            <!-- 搜索框 -->
+            <SearchInput />
+        </div>
+        <!-- 底部全局组件 -->
+        <div class="bottom">
+            footer
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+import HospitalTop from '@/components/xyt/HospitalTop.vue'
+import Carousel from './home/Carousel.vue'
+import SearchInput from './home/SearchInput.vue';
+</script>
+
+<style scoped lang="scss">
+.container {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .content{
+        width: 80%;
+        height: 100vh;
+    }
+    .bottom{
+        width: 80%;
+        height: 50px;
+        background: red;
+    }
+}
+</style>

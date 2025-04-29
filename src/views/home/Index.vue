@@ -40,10 +40,10 @@ const navigateTo = (route) => {
 
 const projects = [
   {
-    name: '项目一',
-    description: '项目简介',
-    detail: '项目技术栈介绍',
-    route: '/p1'
+    name: '小医通',
+    description: '在线预约挂号平台',
+    detail: 'Vue3项目',
+    route: '/xyt'
   },
   {
     name: '项目二',

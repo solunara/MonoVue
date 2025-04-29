@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <h1>p1</h1>
+    <h1>xyt</h1>
 </template>
 
 <style scoped>
