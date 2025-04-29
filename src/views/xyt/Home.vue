@@ -8,6 +8,18 @@
             <Carousel />
             <!-- 搜索框 -->
             <SearchInput />
+            <!-- 医院信息展示 -->
+            <el-row gutter="20">
+                <el-col :span="20">
+                    <!-- 等级子组件 -->
+                    <HospitalLevel />
+                    <!-- 地区子组件 -->
+                    <HospitalRegion />
+                </el-col>
+                <el-col :span="4">
+                    456
+                </el-col>
+            </el-row>
         </div>
         <!-- 底部全局组件 -->
         <div class="bottom">
@@ -19,7 +31,9 @@
 <script setup lang="ts">
 import HospitalTop from '@/components/xyt/HospitalTop.vue'
 import Carousel from './home/Carousel.vue'
-import SearchInput from './home/SearchInput.vue';
+import SearchInput from './home/SearchInput.vue'
+import HospitalLevel from './home/HospitalLevel.vue'
+import HospitalRegion from './home/HospitalRegion.vue'
 </script>
 
 <style scoped lang="scss">
