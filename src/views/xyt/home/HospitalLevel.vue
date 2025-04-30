@@ -25,7 +25,7 @@
     margin-top: 20px;
     h1 {
         font-weight: 900;
-        margin: 10px 0;
+        margin: 10px 0px;
     }
     .content {
         display: flex;
