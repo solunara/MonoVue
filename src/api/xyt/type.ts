@@ -40,10 +40,39 @@ export interface HospitalType {
     is_active:boolean,
 }
 
+
+// 医院等级类型
+export interface HospitalGradeType {
+    id: number,
+    grade_code: string,
+    grade_name: string
+}
+
+// 医院地区类型
+export interface HospitalRegionType {
+    id: number,
+    district_name: string,
+    district_code: string,
+    city_code: string,
+    province_code: string,
+    CreatedAt: number,
+    UpdatedAt: number,
+}
+
 // 接口返回的医院数据列表类型
 export interface HospitalListType extends ResponseData{
     data: {
         list: HospitalType[],
         total: number,
     }
+}
+
+// 接口返回的医院等级列表类型
+export interface ResponseHospitalGrade extends ResponseData{
+    data: HospitalGradeType[]
+}
+
+// 接口返回的医院地区列表类型
+export interface ResponseHospitalRegion extends ResponseData{
+    data: HospitalRegionType[]
 }

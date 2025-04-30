@@ -15,10 +15,10 @@
                     <!-- 等级子组件 -->
                     <HospitalLevel />
                     <!-- 地区子组件 -->
-                    <HospitalRegion />
+                    <HospitalRegion :cityName="cityName" />
                     <!-- 医院信息子组件 -->
                     <div class="hostipalinfo">
-                        <HospitalInfo class="hositem" v-for="item in hospitalList" :key="item.uid" :hospitalInfo="item"/>
+                        <HospitalInfo class="hositem" v-for="item in hospitalList" :key="item.uid" :hospitalInfo="item" />
                     </div>
                     <!-- 医院信息分页 -->
                     <el-pagination
@@ -56,14 +56,15 @@ import { onMounted, ref } from 'vue'
 import {getHospitalList} from '@/api/xyt/home/index'
 import type {HospitalType,HospitalListType} from '@/api/xyt/type'
 
-let cityName = ref<string>('北京市')
+let cityName = ref<string>('北京')
 let pageNo = ref<number>(1)
 let pageSize = ref<number>(10)
 let totalPage = ref<number>(0)
 let hospitalList = ref<HospitalType[]>()
+
 let total = ref<number>(0)
 
-onMounted(()=>{
+onMounted(async ()=>{
     getHospitalData()
 })
 
@@ -74,6 +75,7 @@ const getHospitalData = async ()=>{
         total.value = result.data.total
         totalPage.value = Math.ceil(total.value / pageSize.value)
     }
+    console.log(hospitalList.value);
 }
 
 function handleSizeChange() {

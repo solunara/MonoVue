@@ -2,21 +2,39 @@
     <div class="level">
         <h1>医院</h1>
         <div class="content">
-            <div class="left">等级：</div>
+            <div class="left">等级:</div>
             <ul class="hospital_level">
-                <li class="active">全部</li>
-                <li>三级甲等</li>
-                <li>三级乙等</li>
-                <li>二级甲等</li>
-                <li>二级乙等</li>
-                <li>一级</li>
+                <li :class="{active:activedGradeFlag=='' }" @click="changeGrade('')">全部</li>
+                <li v-for="item in hospitalGradeList" :class="{active:activedGradeFlag==item.grade_code}" :key="item.id" @click="changeGrade(item.grade_code)">{{ item.grade_name }}</li>
             </ul>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import {getHospitalGrade} from '@/api/xyt/home/index'
+import type {HospitalGradeType,ResponseHospitalGrade} from '@/api/xyt/type'
 
+// 医院等级列表数据
+let hospitalGradeList = ref<HospitalGradeType[]>()
+// 医院等级选中控制
+let activedGradeFlag = ref<string>('')
+
+onMounted(async ()=>{
+    getHospitalGradeData()
+})
+
+const getHospitalGradeData = async ()=>{
+    let result:ResponseHospitalGrade = await getHospitalGrade();
+    if(result.code==200){
+        hospitalGradeList.value=result.data.reverse()
+    }
+}
+
+const changeGrade = (gradeCode:string)=>{
+    activedGradeFlag.value = gradeCode
+}
 </script>
 
 <style scoped lang="scss">
@@ -31,6 +49,7 @@
         display: flex;
         .left {
             margin-right: 10px;
+            width: 40px;
         }
         .hospital_level {
             display: flex;
