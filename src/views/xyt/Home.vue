@@ -10,7 +10,7 @@
             <!-- 搜索框 -->
             <SearchInput />
             <!-- 医院信息展示 -->
-            <el-row gutter="20">
+            <el-row :gutter="20">
                 <el-col :span="20">
                     <!-- 等级子组件 -->
                     <HospitalLevel />
@@ -18,7 +18,7 @@
                     <HospitalRegion />
                     <!-- 医院信息子组件 -->
                     <div class="hostipalinfo">
-                        <HospitalInfo class="item" v-for="item in 10" :key="item"/>
+                        <HospitalInfo class="hositem" v-for="item in hospitalList" :key="item.uid" :hospitalInfo="item"/>
                     </div>
                     <!-- 医院信息分页 -->
                     <el-pagination
@@ -27,7 +27,7 @@
                         :page-sizes="[5, 10, 20, 30]"
                         :background="true"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="13"
+                        :total="total"
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         style="margin-bottom: 10px;"
@@ -54,12 +54,13 @@ import HospitalRegion from './home/HospitalRegion.vue'
 import HospitalInfo from './home/HospitalInfo.vue'
 import { onMounted, ref } from 'vue'
 import {getHospitalList} from '@/api/xyt/home/index'
+import type {HospitalType,HospitalListType} from '@/api/xyt/type'
 
 let cityName = ref<string>('北京市')
 let pageNo = ref<number>(1)
 let pageSize = ref<number>(10)
 let totalPage = ref<number>(0)
-let hospitalList = ref([])
+let hospitalList = ref<HospitalType[]>()
 let total = ref<number>(0)
 
 onMounted(()=>{
@@ -67,18 +68,20 @@ onMounted(()=>{
 })
 
 const getHospitalData = async ()=>{
-    let result:any = await getHospitalList(cityName.value, pageNo.value, pageSize.value);
-    if(result.data.code==200){
-        hospitalList.value=result.data.data.list
-        total.value = result.data.data.total
+    let result:HospitalListType = await getHospitalList(cityName.value, pageNo.value, pageSize.value);
+    if(result.code==200){
+        hospitalList.value=result.data.list
+        total.value = result.data.total
         totalPage.value = Math.ceil(total.value / pageSize.value)
     }
-    console.log(total.value);
-    
 }
 
-function handleSizeChange() {}
-function handleCurrentChange() {}
+function handleSizeChange() {
+    getHospitalData()
+}
+function handleCurrentChange() {
+    getHospitalData()
+}
 
 </script>
 
@@ -99,13 +102,13 @@ function handleCurrentChange() {}
             gap: 14px;
             margin-bottom: 10px;
             justify-content: space-between;
-            .item{
+            .hositem{
                 width: 48%;
             }
         }
         @media screen and (max-width: 768px) {
             .hostipalinfo {
-                .item {
+                .hositem {
                     width: 100%;
                 }
             }

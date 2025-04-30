@@ -9,7 +9,7 @@ const request = axios.create({
 });
 
 // axios 全局请求拦截器
-axios.interceptors.request.use(
+request.interceptors.request.use(
     (config)=>{
         // 请求之前的处理
         // 解决get请求缓存问题，给每个请求加个时间戳
@@ -29,9 +29,9 @@ axios.interceptors.request.use(
 );
 
 // axios 全局响应拦截器
-axios.interceptors.response.use(
+request.interceptors.response.use(
     (response)=>{
-        return response
+        return response.data
     },
     (error)=>{
         switch (error.response.status) {
