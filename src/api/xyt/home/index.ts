@@ -14,10 +14,12 @@ export const getHospitalRegion = (cityName:string = '北京') =>  request.get<an
     })
 
 // 获取医院信息
-export const getHospitalList = (cityName:string = '北京市',  pageNo:number = 1, pageSize:number = 1) => request.get<any, HospitalListType>(
+export const getHospitalList = (cityName:string = '北京市', gradeCode:string, districtCode:string, pageNo:number = 1, pageSize:number = 1) => request.get<any, HospitalListType>(
     API_CONFIG_XYT.getHospitalApi, {
         params: {
             cityName: cityName,
+            gradeCode: gradeCode,
+            districtCode: districtCode,
             pageNo: pageNo,
             pageSize: pageSize,
         }

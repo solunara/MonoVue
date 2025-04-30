@@ -21,6 +21,8 @@ let hospitalGradeList = ref<HospitalGradeType[]>()
 // 医院等级选中控制
 let activedGradeFlag = ref<string>('')
 
+let $emit = defineEmits(['getGradeCode'])
+
 onMounted(async ()=>{
     getHospitalGradeData()
 })
@@ -34,7 +36,10 @@ const getHospitalGradeData = async ()=>{
 
 const changeGrade = (gradeCode:string)=>{
     activedGradeFlag.value = gradeCode
+    $emit('getGradeCode', gradeCode)
 }
+
+
 </script>
 
 <style scoped lang="scss">
@@ -49,10 +54,11 @@ const changeGrade = (gradeCode:string)=>{
         display: flex;
         .left {
             margin-right: 10px;
-            width: 40px;
+            width: 50px;
         }
         .hospital_level {
             display: flex;
+            gap: 16px;
             li {
                 margin-right: 10px;
                 &.active {

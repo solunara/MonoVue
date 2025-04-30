@@ -13,9 +13,9 @@
             <el-row :gutter="20">
                 <el-col :span="20">
                     <!-- 等级子组件 -->
-                    <HospitalLevel />
+                    <HospitalLevel @getGradeCode="getGradeCode"/>
                     <!-- 地区子组件 -->
-                    <HospitalRegion :cityName="cityName" />
+                    <HospitalRegion :cityName="cityName" @getDistrictCode="getDistrictCode"/>
                     <!-- 医院信息子组件 -->
                     <div class="hostipalinfo">
                         <HospitalInfo class="hositem" v-for="item in hospitalList" :key="item.uid" :hospitalInfo="item" />
@@ -61,22 +61,38 @@ let pageNo = ref<number>(1)
 let pageSize = ref<number>(10)
 let totalPage = ref<number>(0)
 let hospitalList = ref<HospitalType[]>()
-
 let total = ref<number>(0)
+
+// 子组件传递的数据
+let gradeCode = ref<string>('')
+let districtCode = ref<string>('')
 
 onMounted(async ()=>{
     getHospitalData()
 })
 
 const getHospitalData = async ()=>{
-    let result:HospitalListType = await getHospitalList(cityName.value, pageNo.value, pageSize.value);
+    let result:HospitalListType = await getHospitalList(cityName.value, gradeCode.value, districtCode.value, pageNo.value, pageSize.value);
     if(result.code==200){
         hospitalList.value=result.data.list
         total.value = result.data.total
         totalPage.value = Math.ceil(total.value / pageSize.value)
     }
     console.log(hospitalList.value);
+    
 }
+
+const getGradeCode = (gradecode:string)=>{
+    gradeCode.value=gradecode
+    getHospitalData()
+}
+
+const getDistrictCode = (district:string)=>{
+    districtCode.value=district
+    getHospitalData()
+}
+
+
 
 function handleSizeChange() {
     getHospitalData()
@@ -84,7 +100,6 @@ function handleSizeChange() {
 function handleCurrentChange() {
     getHospitalData()
 }
-
 </script>
 
 <style scoped lang="scss">
@@ -101,7 +116,7 @@ function handleCurrentChange() {
         .hostipalinfo {
             display: flex;
             flex-wrap: wrap;
-            gap: 14px;
+            gap: 16px;
             margin-bottom: 10px;
             justify-content: space-between;
             .hositem{
