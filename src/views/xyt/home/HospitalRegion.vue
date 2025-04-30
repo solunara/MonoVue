@@ -39,12 +39,12 @@
 <style scoped lang="scss">
 .region {
     color: #7f7f7f;
-    margin-top: 10px;
+    margin-top: 20px;
     .content {
         display: flex;
         .left {
             margin-right: 10px;
-            width: 60px;
+            width: 50px;
         }
         ul {
             display: flex;
