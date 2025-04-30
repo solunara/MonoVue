@@ -2,6 +2,7 @@
     <div class="container">
         <!-- 顶部全局组件 -->
         <HospitalTop />
+        
         <!-- 中间内容 -->
         <div class="content">
             <!-- 轮播图 -->
@@ -51,40 +52,69 @@ import SearchInput from './home/SearchInput.vue'
 import HospitalLevel from './home/HospitalLevel.vue'
 import HospitalRegion from './home/HospitalRegion.vue'
 import HospitalInfo from './home/HospitalInfo.vue'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import {getHospitalList} from '@/api/xyt/home/index'
 
-// 分页器需要的数据
+let cityName = ref<string>('北京市')
 let pageNo = ref<number>(1)
 let pageSize = ref<number>(10)
+let totalPage = ref<number>(0)
+let hospitalList = ref([])
+let total = ref<number>(0)
+
+onMounted(()=>{
+    getHospitalData()
+})
+
+const getHospitalData = async ()=>{
+    let result:any = await getHospitalList(cityName.value, pageNo.value, pageSize.value);
+    if(result.data.code==200){
+        hospitalList.value=result.data.data.list
+        total.value = result.data.data.total
+        totalPage.value = Math.ceil(total.value / pageSize.value)
+    }
+    console.log(total.value);
+    
+}
+
 function handleSizeChange() {}
 function handleCurrentChange() {}
+
 </script>
 
 <style scoped lang="scss">
 .container {
-    height: 100vh;
+    height: 100%;
     width: 100%;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     .content{
         width: 80%;
-        height: 100vh;
+        flex: 1;
+        .hostipalinfo {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 10px;
+            justify-content: space-between;
+            .item{
+                width: 48%;
+            }
+        }
+        @media screen and (max-width: 768px) {
+            .hostipalinfo {
+                .item {
+                    width: 100%;
+                }
+            }
+        }
     }
     .bottom{
         width: 80%;
-        height: 50px;
+        height: 70px;
         background: #ccc;
-    }
-    .hostipalinfo{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        .item{
-            width: 48%;
-            margin-bottom: 10px;
-        }
-
     }
 }
 </style>
