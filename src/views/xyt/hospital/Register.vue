@@ -1,6 +1,6 @@
 <template>
     <div>
-        hospital 详情页
+        预约挂号
     </div>
 </template>
 

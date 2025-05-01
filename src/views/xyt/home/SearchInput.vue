@@ -17,7 +17,7 @@ import { Search } from "@element-plus/icons-vue";
 import { ref } from "vue";
 import { useRouter } from 'vue-router'
 import {getHospitalListByName} from '@/api/xyt/home/index'
-import type {HospitalType,RespHospitalListType} from '@/api/xyt/type'
+import type {RespHospitalListType} from '@/api/xyt/type'
 
 const $router = useRouter()
 
@@ -36,8 +36,10 @@ const fetchData = async (keyword:string, callback:any)=>{
 const goHosDetail = (item: any)=>{
     console.log(item);
     $router.push({
-        path: '/xyt/hospital',
-        //query: props.hospitalInfo.uid,
+        path: '/xyt/hospital/register',
+        query: {
+            uid: item.hosuid,
+        }
     })
 }
 </script>
