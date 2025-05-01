@@ -49,26 +49,32 @@ const changeRegion = (regionId:number, regionCode:string)=>{
     color: #7f7f7f;
     margin-top: 20px;
     margin-bottom: 20px;
+
     .content {
-        display: flex;
+        display: grid;
+        grid-template-columns: 50px 1fr; // 左 50px，右自适应
+        align-items: start;
+
         .left {
+            grid-column: 1;
             margin-right: 10px;
-            width: 50px;
         }
+
         ul {
+            grid-column: 2;
             display: flex;
             flex-wrap: wrap;
             gap: 16px;
+
             li {
-                margin-right: 10px;
-                margin-bottom: 10px;
-                &.active {
-                    color: #55a6fe;
-                }
+            margin-bottom: 10px;
+            &.active {
+                color: #55a6fe;
             }
-            li:hover {
+            &:hover {
                 color: #55a6fe;
                 cursor: pointer;
+            }
             }
         }
     }

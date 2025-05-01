@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <!-- 顶部全局组件 -->
-        <HospitalTop />
+        <!-- <HospitalTop /> -->
         
         <!-- 中间内容 -->
         <div class="content">
@@ -17,8 +17,11 @@
                     <!-- 地区子组件 -->
                     <HospitalRegion :cityName="cityName" @getDistrictCode="getDistrictCode"/>
                     <!-- 医院信息子组件 -->
-                    <div class="hostipalinfo">
+                    <div class="hostipalinfo" v-if="hospitalList && hospitalList.length>0">
                         <HospitalInfo class="hositem" v-for="item in hospitalList" :key="item.uid" :hospitalInfo="item" />
+                    </div>
+                    <div v-else>
+                        <el-empty :image-size="200" description="暂无数据"/>
                     </div>
                     <!-- 医院信息分页 -->
                     <el-pagination
@@ -46,12 +49,12 @@
 </template>
 
 <script setup lang="ts">
-import HospitalTop from '@/components/xyt/HospitalTop.vue'
-import Carousel from './home/Carousel.vue'
-import SearchInput from './home/SearchInput.vue'
-import HospitalLevel from './home/HospitalLevel.vue'
-import HospitalRegion from './home/HospitalRegion.vue'
-import HospitalInfo from './home/HospitalInfo.vue'
+// import HospitalTop from '@/components/xyt/HospitalTop.vue'
+import Carousel from './Carousel.vue'
+import SearchInput from './SearchInput.vue'
+import HospitalLevel from './HospitalLevel.vue'
+import HospitalRegion from './HospitalRegion.vue'
+import HospitalInfo from './HospitalInfo.vue'
 import { onMounted, ref } from 'vue'
 import {getHospitalList} from '@/api/xyt/home/index'
 import type {HospitalType,HospitalListType} from '@/api/xyt/type'
@@ -60,7 +63,7 @@ let cityName = ref<string>('北京')
 let pageNo = ref<number>(1)
 let pageSize = ref<number>(10)
 let totalPage = ref<number>(0)
-let hospitalList = ref<HospitalType[]>()
+let hospitalList = ref<HospitalType[]>([])
 let total = ref<number>(0)
 
 // 子组件传递的数据
@@ -78,8 +81,6 @@ const getHospitalData = async ()=>{
         total.value = result.data.total
         totalPage.value = Math.ceil(total.value / pageSize.value)
     }
-    console.log(hospitalList.value);
-    
 }
 
 const getGradeCode = (gradecode:string)=>{

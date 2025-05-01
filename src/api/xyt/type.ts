@@ -59,12 +59,17 @@ export interface HospitalRegionType {
     UpdatedAt: number,
 }
 
-// 接口返回的医院数据列表类型
+// 接口返回的医院分页数据列表类型
 export interface HospitalListType extends ResponseData{
     data: {
         list: HospitalType[],
         total: number,
     }
+}
+
+// 接口返回的医院数据列表类型
+export interface RespHospitalListType extends ResponseData{
+    data: HospitalType[]
 }
 
 // 接口返回的医院等级列表类型
