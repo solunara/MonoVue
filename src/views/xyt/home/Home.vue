@@ -37,7 +37,7 @@
                     />
                 </el-col>
                 <el-col :span="4">
-                    456
+                    <Tip/>
                 </el-col>
             </el-row>
         </div>
@@ -55,6 +55,7 @@ import SearchInput from './SearchInput.vue'
 import HospitalLevel from './HospitalLevel.vue'
 import HospitalRegion from './HospitalRegion.vue'
 import HospitalInfo from './HospitalInfo.vue'
+import Tip from './Tip.vue'
 import { onMounted, ref } from 'vue'
 import {getHospitalList} from '@/api/xyt/home/index'
 import type {HospitalType,HospitalListType} from '@/api/xyt/type'
