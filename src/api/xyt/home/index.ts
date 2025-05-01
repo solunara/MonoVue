@@ -1,6 +1,11 @@
 import { API_CONFIG_XYT } from "@/api/xyt/config";
 import request  from "@/api/request.js";
-import type {HospitalListType,ResponseHospitalGrade,ResponseHospitalRegion} from '@/api/xyt/type'
+import type {
+    HospitalListType,
+    RespHospitalListType,
+    ResponseHospitalGrade,
+    ResponseHospitalRegion
+} from '@/api/xyt/type'
 
 // 获取医院等级
 export const getHospitalGrade = () => request.get<any, ResponseHospitalGrade>(API_CONFIG_XYT.getHospitalGradeApi)
@@ -13,8 +18,8 @@ export const getHospitalRegion = (cityName:string = '北京') =>  request.get<an
         }
     })
 
-// 获取医院信息
-export const getHospitalList = (cityName:string = '北京市', gradeCode:string, districtCode:string, pageNo:number = 1, pageSize:number = 1) => request.get<any, HospitalListType>(
+// 按条件获取医院信息
+export const getHospitalList = (cityName:string = '北京', gradeCode:string, districtCode:string, pageNo:number = 1, pageSize:number = 1) => request.get<any, HospitalListType>(
     API_CONFIG_XYT.getHospitalApi, {
         params: {
             cityName: cityName,
@@ -24,3 +29,12 @@ export const getHospitalList = (cityName:string = '北京市', gradeCode:string,
             pageSize: pageSize,
         }
     })
+
+// 根据医院名字获取医院信息
+export const getHospitalListByName = (hosName:string) => request.get<any, RespHospitalListType>(
+    API_CONFIG_XYT.getHospitalApi, {
+        params: {
+            hosName: hosName,
+        }
+    })
+

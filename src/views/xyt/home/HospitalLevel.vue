@@ -1,6 +1,5 @@
 <template>
     <div class="level">
-        <h1>医院</h1>
         <div class="content">
             <div class="left">等级:</div>
             <ul class="hospital_level">
@@ -51,25 +50,28 @@ const changeGrade = (gradeCode:string)=>{
         margin: 10px 0px;
     }
     .content {
-        display: flex;
+        display: grid;
+        grid-template-columns: 50px 1fr; // 左 50px，右自适应
+        align-items: start;
         .left {
+            grid-column: 1;
             margin-right: 10px;
-            width: 50px;
         }
-        .hospital_level {
+        ul {
+            grid-column: 2;
             display: flex;
+            flex-wrap: wrap;
             gap: 16px;
             li {
-                margin-right: 10px;
+                margin-bottom: 10px;
                 &.active {
                     color: #55a6fe;
                 }
+                &:hover {
+                    color: #55a6fe;
+                    cursor: pointer;
+                }
             }
-            li:hover {
-                color: #55a6fe;
-                cursor: pointer;
-            }
-            
         }
     }
 }

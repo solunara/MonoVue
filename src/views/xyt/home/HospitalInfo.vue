@@ -1,5 +1,5 @@
 <template>
-    <el-card class="box-card" shadow="hover">
+    <el-card class="box-card" shadow="hover" @click="goHosDetail">
         <div class="content">
             <div class="left">
                 <div class="hostipal_name">
@@ -24,7 +24,20 @@
 </template>
 
 <script setup lang="ts">
-defineProps(['hospitalInfo'])
+import { defineProps } from 'vue'
+import { useRouter } from 'vue-router'
+
+const $router = useRouter()
+let props = defineProps(['hospitalInfo'])
+
+const goHosDetail=()=>{
+    $router.push({
+        path: '/xyt/hospital/detail',
+        query: {
+            uid: props.hospitalInfo.uid,
+        }
+    })
+}
 </script>
 
 <style scoped lang="scss">
