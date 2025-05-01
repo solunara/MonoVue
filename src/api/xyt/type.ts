@@ -59,6 +59,20 @@ export interface HospitalRegionType {
     UpdatedAt: number,
 }
 
+// 医院科室类型
+export interface HospitalDepartment2 {
+    uid: string,
+    name: string,
+    description: string,
+}
+
+export interface HospitalDepartment1 {
+    uid: string,
+    name: string,
+    description: string,
+    children: HospitalDepartment2[]
+}
+
 // 接口返回的医院分页数据列表类型
 export interface HospitalListType extends ResponseData{
     data: {
@@ -85,4 +99,9 @@ export interface ResponseHospitalGrade extends ResponseData{
 // 接口返回的医院地区列表类型
 export interface ResponseHospitalRegion extends ResponseData{
     data: HospitalRegionType[]
+}
+
+// 接口返回的医院科室列表类型
+export interface ResponseHospitalDepartment extends ResponseData{
+    data: HospitalDepartment1[]
 }

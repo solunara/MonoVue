@@ -28,18 +28,52 @@
                 </div>
             </div>
         </div>
+        <!-- 医院科室数据 -->
+         <div class="department">
+            <!-- 一级科室菜单 -->
+            <div class="leftNav">
+                <ul>
+                    <li @click="changeIndex(index)" :class="{active:currentIndex==index}" v-for="(dpt,index) in hosDetail.getDepartmentList" :key="dpt.uid">{{ dpt.name }}</li>
+                </ul>
+            </div>
+            <!-- 二级科室列表 -->
+            <div class="rightNav">
+                <div class="showDepartment" v-for="dpt in hosDetail.getDepartmentList" :key="dpt.uid">
+                    <p class="cur"> {{ dpt.name }}</p>
+                    <ul>
+                        <li v-for="item in dpt.children" :key="item.uid">{{ item.name }}</li>
+                    </ul>
+                </div>
+            </div>
+         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import {useHosDetailStore} from '@/store/xyt/index'
 
 let hosDetail = useHosDetailStore();
+let currentIndex = ref<number>(0);
 
+onMounted(()=>{
+    hosDetail.getHospitalDepartment()
+})
+
+const changeIndex = (index:number)=>{
+    currentIndex.value = index
+    let allP = document.querySelectorAll('.cur')
+    allP[index].scrollIntoView({
+        block: 'start',
+        behavior: 'smooth',
+    })
+}
 </script>
 
 <style scoped lang="scss">
 .register{
+    width: 100%;
+        height: 100%;
     .top{
         display: flex;
         align-items: center;
@@ -69,6 +103,59 @@ let hosDetail = useHosDetailStore();
             .time, .address, .canceltime {
                 margin-top: 10px;
                 color: #7f7f7f;
+            }
+        }
+    }
+    .department{
+        display: flex;
+        width: 100%;
+        height: 400px;
+        margin-top: 20px;
+        .leftNav{
+            width: 80px;
+            height: 100%;
+            ul {
+                width: 100%;
+                height: 100%;
+                background: rgb(248, 248, 248);
+                color: #7f7f7f;
+                font-size: 14px;
+                display: flex;
+                flex-direction: column;
+                li {
+                    flex: 1;
+                    text-align: center;
+                    line-height: 30px;
+                    &.active {
+                        border-left: 2px solid red;
+                        background: white;
+                        color: red;
+                    }
+                }
+            }
+        }
+        .rightNav{
+            flex: 1;
+            height: 100%;
+            overflow: auto;
+            color: #7f7f7f;
+            margin-left: 20px;
+            &::-webkit-scrollbar{
+                display: none;
+            }
+            .showDepartment {
+                p {
+                    background: rgb(248, 248, 248);
+                }
+                ul {
+                    display: flex;
+                    flex-wrap: wrap;
+                    font-size: 14px;
+                    li {
+                        width: 33%;
+                        line-height: 30px;
+                    }
+                }
             }
         }
     }

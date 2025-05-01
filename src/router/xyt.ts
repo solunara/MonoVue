@@ -32,11 +32,6 @@ export const routes_xyt = [
                         component: () => import('@/views/xyt/hospital/Notice.vue')
                     },
                     {
-                        path: 'search',
-                        name: 'search',
-                        component: () => import('@/views/xyt/hospital/Search.vue')
-                    },
-                    {
                         path: 'suspension',
                         name: 'suspension',
                         component: () => import('@/views/xyt/hospital/Suspension.vue')

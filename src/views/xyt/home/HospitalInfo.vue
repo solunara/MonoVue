@@ -32,7 +32,7 @@ let props = defineProps(['hospitalInfo'])
 
 const goHosDetail=()=>{
     $router.push({
-        path: '/xyt/hospital/register',
+        path: '/xyt/hospital/detail',
         query: {
             uid: props.hospitalInfo.uid,
         }

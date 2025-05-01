@@ -7,35 +7,30 @@
                 <span>医院详情信息</span>
             </div>
             <el-menu
-                router
                 :default-active=" $route.path"
                 class="el-menu-vertical-demo"
             >
-                <el-menu-item index="/xyt/hospital/register">
-                    <el-icon><icon-menu /></el-icon>
-                    <span>预约挂号</span>
-                </el-menu-item>
-                <el-menu-item index="/xyt/hospital/detail">
+                <el-menu-item index="/xyt/hospital/detail" @click="goTo('/xyt/hospital/detail', { uid: (($route.query.uid ?? '') as string) })">
                     <el-icon><Document /></el-icon>
                     <span>医院详情</span>
                 </el-menu-item>
-                <el-menu-item index="/xyt/hospital/notice">
+                <el-menu-item index="/xyt/hospital/notice" @click="goTo('/xyt/hospital/notice', { uid: (($route.query.uid ?? '') as string) })">
                     <el-icon><Setting /></el-icon>
                     <span>预约须知</span>
                 </el-menu-item>
-                <el-menu-item index="/xyt/hospital/suspension">
+                <el-menu-item index="/xyt/hospital/register" @click="goTo('/xyt/hospital/register', { uid: (($route.query.uid ?? '') as string) })">
+                    <el-icon><icon-menu /></el-icon>
+                    <span>预约挂号</span>
+                </el-menu-item>
+                <el-menu-item index="/xyt/hospital/suspension" @click="goTo('/xyt/hospital/suspension', { uid: (($route.query.uid ?? '') as string) })">
                     <el-icon><InfoFilled /></el-icon>
                     <span>停诊信息</span>
-                </el-menu-item>
-                <el-menu-item index="/xyt/hospital/search">
-                    <el-icon><icon-menu /></el-icon>
-                    <span>查询/取消</span>
                 </el-menu-item>
             </el-menu>
         </div>
         <!-- 右侧内容 -->
         <div class="content">
-            <router-view/>
+            <router-view></router-view>
         </div>
     </div>
 </template>
@@ -43,16 +38,20 @@
 <script setup lang="ts">
 import { InfoFilled, Menu as IconMenu, Document, Setting, HomeFilled} from '@element-plus/icons-vue'
 import { onMounted } from 'vue';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {useHosDetailStore} from '@/store/xyt/index'
 
 let hosDetail = useHosDetailStore();
 const $route = useRoute();
+const $router = useRouter();
 
 onMounted(()=>{
-    console.log( $route.query);
     hosDetail.getHospitalUid(($route.query.uid??'') as string)
 })
+
+const goTo = (path:string, query?: Record<string, string>)=>{
+    $router.push({ path, query })
+}
 </script>
 
 <style scoped>
