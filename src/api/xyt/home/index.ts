@@ -1,6 +1,11 @@
 import { API_CONFIG_XYT } from "@/api/xyt/config";
 import request  from "@/api/request.js";
-import type {HospitalListType,RespHospitalListType,ResponseHospitalGrade,ResponseHospitalRegion} from '@/api/xyt/type'
+import type {
+    HospitalListType,
+    RespHospitalListType,
+    ResponseHospitalGrade,
+    ResponseHospitalRegion
+} from '@/api/xyt/type'
 
 // 获取医院等级
 export const getHospitalGrade = () => request.get<any, ResponseHospitalGrade>(API_CONFIG_XYT.getHospitalGradeApi)
@@ -32,3 +37,4 @@ export const getHospitalListByName = (hosName:string) => request.get<any, RespHo
             hosName: hosName,
         }
     })
+

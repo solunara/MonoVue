@@ -42,9 +42,17 @@
 
 <script setup lang="ts">
 import { InfoFilled, Menu as IconMenu, Document, Setting, HomeFilled} from '@element-plus/icons-vue'
+import { onMounted } from 'vue';
 import { useRoute } from 'vue-router'
+import {useHosDetailStore} from '@/store/xyt/index'
 
+let hosDetail = useHosDetailStore();
 const $route = useRoute();
+
+onMounted(()=>{
+    console.log( $route.query);
+    hosDetail.getHospitalUid(($route.query.uid??'') as string)
+})
 </script>
 
 <style scoped>
@@ -63,11 +71,12 @@ const $route = useRoute();
         flex: 2;
         display: flex;
         flex-direction: column;
-        /* align-items: center; */
+        align-items:baseline;
     }
 
     .content {
         flex: 8;
+        align-items: flex-start;
     }
 }
 </style>

@@ -67,6 +67,11 @@ export interface HospitalListType extends ResponseData{
     }
 }
 
+// 接口返回的医院详情类型
+export interface RespHospitalDetailType extends ResponseData{
+    data: HospitalType
+}
+
 // 接口返回的医院数据列表类型
 export interface RespHospitalListType extends ResponseData{
     data: HospitalType[]

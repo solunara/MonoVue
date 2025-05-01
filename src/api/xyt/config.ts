@@ -5,4 +5,5 @@ export const API_CONFIG_XYT = {
     getHospitalApi: `${BASE_URL_XYT}/hos/list`,
     getHospitalGradeApi: `${BASE_URL_XYT}/hos/grade`,
     getHospitalRegionApi: `${BASE_URL_XYT}/hos/region`,
+    getHospitalDetailApi: `${BASE_URL_XYT}/hos/detail`,
 }
