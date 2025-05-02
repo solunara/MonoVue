@@ -11,6 +11,8 @@
                 </transition>
             </router-view>
         </div>
+        <!-- 登录组件 -->
+        <Login />
         <!-- 全局底部组件 -->
         <HospitalBottom />
     </div>
@@ -19,6 +21,7 @@
 <script setup>
 import HospitalTop from '@/components/xyt/HospitalTop.vue'
 import HospitalBottom from '@/components/xyt/HospitalBottom.vue'
+import Login from '@/views/xyt/login/Login.vue'
 </script>
 
 <style scoped lang="scss">

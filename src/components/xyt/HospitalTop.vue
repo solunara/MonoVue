@@ -6,14 +6,20 @@
             </div>
             <div class="right">
                 <p class="help">帮助信息</p>
-                <p class="login">登陆/注册</p>
+                <p class="login" @click="login">登陆/注册</p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import {useUserStore} from '@/store/xyt/user'
 
+let userStore = useUserStore();
+
+const login=()=>{
+    userStore.changeLoginVisiabe();
+}
 </script>
 
 <style scoped lang="scss">
@@ -43,8 +49,9 @@
             align-items: center;
             font-size: 14px;
             color: #bbb;
-            .help {
-                margin-right: 10px;
+            line-height: 30px;
+            .login {
+                margin-left: 10px;
             }
         }
     }

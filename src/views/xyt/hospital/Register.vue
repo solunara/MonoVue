@@ -41,7 +41,7 @@
                 <div class="showDepartment" v-for="dpt in hosDetail.getDepartmentList" :key="dpt.uid">
                     <p class="cur"> {{ dpt.name }}</p>
                     <ul>
-                        <li v-for="item in dpt.children" :key="item.uid">{{ item.name }}</li>
+                        <li v-for="item in dpt.children" :key="item.uid" @click="login">{{ item.name }}</li>
                     </ul>
                 </div>
             </div>
@@ -52,7 +52,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import {useHosDetailStore} from '@/store/xyt/index'
+import {useUserStore} from '@/store/xyt/user'
 
+let userStore = useUserStore();
 let hosDetail = useHosDetailStore();
 let currentIndex = ref<number>(0);
 
@@ -67,6 +69,10 @@ const changeIndex = (index:number)=>{
         block: 'start',
         behavior: 'smooth',
     })
+}
+
+const login=()=>{
+    userStore.changeLoginVisiabe();
 }
 </script>
 
