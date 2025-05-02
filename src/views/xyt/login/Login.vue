@@ -1,10 +1,12 @@
+<template>
+    <div class="login">
+
+    </div>
+</template>
+
 <script setup lang="ts">
 
 </script>
-
-<template>
-    <h1>xyt</h1>
-</template>
 
 <style scoped>
 </style>
