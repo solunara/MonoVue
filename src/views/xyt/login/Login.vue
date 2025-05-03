@@ -163,7 +163,6 @@ const loginWithCode = async ()=>{
     let result:ResponseLoginType = await loginByPhoneCode(data)
     if (result.code===200){
         loading.value=true
-        SET_XYT_TOKEN(JSON.stringify(result.data));
         userStore.setUserInfo(result.data);
         closeDialogCallback();
         ElMessage({

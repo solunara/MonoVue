@@ -19,7 +19,7 @@
                         <el-dropdown-item>实名认证</el-dropdown-item>
                         <el-dropdown-item>挂号订单</el-dropdown-item>
                         <el-dropdown-item>就诊人管理</el-dropdown-item>
-                        <el-dropdown-item >退出登陆</el-dropdown-item>
+                        <el-dropdown-item @click="logout">退出登陆</el-dropdown-item>
                     </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -31,11 +31,21 @@
 <script setup lang="ts">
 import { ArrowDown } from '@element-plus/icons-vue'
 import {useUserStore} from '@/store/xyt/user'
+import { useRouter } from 'vue-router'
+import type {UserInfoType} from '@/api/xyt/type'
 
+const $router = useRouter()
 let userStore = useUserStore();
 
 const login=()=>{
     userStore.loginVisiabe=true;
+}
+
+const logout = ()=>{
+    userStore.setUserInfo(<UserInfoType>{name:'', token:''})
+    $router.push({
+        path: '/xyt/xythome',
+    })
 }
 
 </script>
