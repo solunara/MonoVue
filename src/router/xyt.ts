@@ -1,4 +1,7 @@
 import Layout from '@/views/xyt/Layout.vue'
+import { GET_XYT_TOKEN } from '@/utils/token';
+import type {UserInfoType} from '@/api/xyt/type'
+import {useUserStore} from '@/store/xyt/user'
 
 export const routes_xyt = [
     {
@@ -35,6 +38,26 @@ export const routes_xyt = [
                         path: 'suspension',
                         name: 'suspension',
                         component: () => import('@/views/xyt/hospital/Suspension.vue')
+                    },
+                    {
+                        path: 'register2',
+                        name: 'register2',
+                        component: () => import('@/views/xyt/hospital/RegisterTwo.vue'),
+                        beforeEnter(to:any, from:any, next:any){
+                            const tokenStr = GET_XYT_TOKEN()
+                            if (tokenStr==null || tokenStr==''){
+                                next('/xyt/hospital/register?uid='+from.query.uid)
+                                useUserStore().loginVisiabe=true
+                                return
+                            }
+                            const userInfoType =  JSON.parse(tokenStr as string) as UserInfoType
+                            if (userInfoType == null || userInfoType.name == ''){
+                                next('/xyt/hospital/register?uid='+from.query.uid)
+                                useUserStore().loginVisiabe=true
+                                return
+                            }
+                            next()
+                        }
                     },
                 ]
             },

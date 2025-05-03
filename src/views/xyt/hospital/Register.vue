@@ -41,7 +41,7 @@
                 <div class="showDepartment" v-for="dpt in hosDetail.getDepartmentList" :key="dpt.uid">
                     <p class="cur"> {{ dpt.name }}</p>
                     <ul>
-                        <li v-for="item in dpt.children" :key="item.uid" @click="login">{{ item.name }}</li>
+                        <li v-for="item in dpt.children" :key="item.uid" @click="login(item.uid)">{{ item.name }}</li>
                     </ul>
                 </div>
             </div>
@@ -52,9 +52,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import {useHosDetailStore} from '@/store/xyt/index'
-import {useUserStore} from '@/store/xyt/user'
-
-let userStore = useUserStore();
+import { useRoute,useRouter } from 'vue-router'
+const $route = useRoute();
+const $router = useRouter()
 let hosDetail = useHosDetailStore();
 let currentIndex = ref<number>(0);
 
@@ -71,8 +71,14 @@ const changeIndex = (index:number)=>{
     })
 }
 
-const login=()=>{
-    userStore.loginVisiabe=true;
+const login=(departmentid:string)=>{
+    $router.push({
+        path: '/xyt/hospital/register2',
+        query: {
+            hosId: $route.query.uid,
+            departmentId: departmentid,
+        }
+    })
 }
 </script>
 
@@ -132,6 +138,7 @@ const login=()=>{
                     flex: 1;
                     text-align: center;
                     line-height: 30px;
+                    cursor: pointer;
                     &.active {
                         border-left: 2px solid red;
                         background: white;
@@ -160,6 +167,10 @@ const login=()=>{
                     li {
                         width: 33%;
                         line-height: 30px;
+                    }
+                    li:hover {
+                        color: #409EFF;
+                        cursor: pointer; /* 可选：鼠标变成小手 */
                     }
                 }
             }
