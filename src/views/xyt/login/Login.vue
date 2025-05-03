@@ -14,16 +14,19 @@
                     <!-- 手机号登录 -->
                     <el-form>
                         <el-form-item>
-                            <el-input placeholder="请输入手机号" :prefix-icon="User"></el-input>
+                            <el-input placeholder="请输入手机号" :prefix-icon="User" v-model="formValue.phone"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-input placeholder="请输入验证码" :prefix-icon="Lock"></el-input>
+                            <el-input placeholder="请输入验证码" :prefix-icon="Lock" v-model="formValue.code"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button>获取验证码</el-button>
+                            <el-button :disabled="!isPhone || countdownFlag">
+                                <Countdown v-if="countdownFlag" :flag="countdownFlag" @getFlag="getFlag"/>
+                                <span v-else  @click="getPhoneMessageCode(formValue.phone)">获取验证码</span>
+                            </el-button>
                         </el-form-item>
                     </el-form>
-                    <el-button type="primary" style="width: 100%;">用户登陆</el-button>
+                    <el-button type="primary" style="width: 100%;" :disabled="!isPhone || !isCode" @click="loginWithCode">用户登陆</el-button>
                     <div class="userlogin" @click="changeScene">
                         <span>微信扫码登录</span>
                         <svg t="1746149717178" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7341" width="32" height="32"><path d="M0 0m184.32 0l655.36 0q184.32 0 184.32 184.32l0 655.36q0 184.32-184.32 184.32l-655.36 0q-184.32 0-184.32-184.32l0-655.36q0-184.32 184.32-184.32Z" fill="#65DB79" p-id="7342"></path><path d="M663.21408 407.02976c-128.75776 0-233.13408 87.296-233.13408 194.97984s104.37632 194.97984 233.13408 194.97984a273.85856 273.85856 0 0 0 88.79104-14.76608l66.74432 35.55328-8.98048-64.12288a183.78752 183.78752 0 0 0 86.5792-151.64416c-0.01024-107.68384-104.38656-194.97984-233.13408-194.97984z" fill="#FFFFFF" p-id="7343"></path><path d="M404.48 194.56c137.0112 0 250.28608 83.968 276.16256 195.2768-48.82432-4.01408-302.08 23.27552-261.85728 271.36-36.4032 0.1024-86.016-1.49504-121.5488-13.4656l-80.62976 42.97728 10.8544-77.45536C164.7104 571.7504 122.88 505.00608 122.88 430.08c0-130.048 126.07488-235.52 281.6-235.52z" fill="#FFFFFF" p-id="7344"></path><path d="M313.344 352.256m-36.864 0a36.864 36.864 0 1 0 73.728 0 36.864 36.864 0 1 0-73.728 0Z" fill="#65DB79" p-id="7345"></path><path d="M497.664 352.256m-36.864 0a36.864 36.864 0 1 0 73.728 0 36.864 36.864 0 1 0-73.728 0Z" fill="#65DB79" p-id="7346"></path><path d="M585.728 544.768m-32.768 0a32.768 32.768 0 1 0 65.536 0 32.768 32.768 0 1 0-65.536 0Z" fill="#65DB79" p-id="7347"></path><path d="M741.376 544.768m-32.768 0a32.768 32.768 0 1 0 65.536 0 32.768 32.768 0 1 0-65.536 0Z" fill="#65DB79" p-id="7348"></path></svg>
@@ -69,12 +72,35 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessage } from 'element-plus'
 import {useUserStore} from '@/store/xyt/user'
-import { User,Lock } from '@element-plus/icons-vue'
-import { ref } from 'vue'
-
+import { User,Lock, Phone } from '@element-plus/icons-vue'
+import { ref, reactive, computed } from 'vue'
+import type {ResponsePhoneCode,RequestLoginByPhone,ResponseLoginType} from '@/api/xyt/type'
+import {getPhoneCode,loginByPhoneCode} from '@/api/xyt/user/user'
+import Countdown from '@/components/xyt/Countdown.vue'
+import { SET_XYT_TOKEN } from '@/utils/token'
 let scene = ref<number>(0)
 let userStore = useUserStore();
+let formValue = reactive({
+    phone: '',
+    code: '',
+}) 
+
+let isPhone = computed(()=>{
+    const reg = /^1((34[0-8])|(8\d{2})|(([35][0-35-9]|4[579]|66|7[35678]|9[13589])\d{1}))\d{7}$/;
+    //返回布尔值:真代表手机号码、假代表的即为不是手机号码
+    return reg.test(formValue.phone);
+})
+
+let isCode = computed(()=>{
+    if (formValue.code.length===6){
+         return !isNaN(Number(formValue.code));
+    }
+    return false;
+})
+
+let countdownFlag = ref<boolean>(false)
 
 const closeDialog = ()=>{
     userStore.changeLoginVisiabe();
@@ -85,6 +111,54 @@ const changeScene = ()=>{
         scene.value = 1
     }else{
         scene.value = 0
+    }
+}
+
+const getPhoneMessageCode = async (phone:string)=>{
+    if(formValue.phone == '' || !isPhone){
+        return
+    }
+    if(countdownFlag.value){
+        return
+    }
+    
+    let result:ResponsePhoneCode = await getPhoneCode(phone);
+    if(result.code==200){
+        countdownFlag.value=true;
+        ElMessage({
+            type: 'success',
+            message: ('您的验证码：' + result.data + '   有效期1分钟'),
+        });
+    }else{
+        ElMessage({
+            type: 'error',
+            message: ('出错了：' + result.msg),
+        });
+    }
+}
+
+const getFlag = (value:boolean)=>{
+    countdownFlag.value = value
+}
+
+const loginWithCode = async ()=>{
+    let data=<RequestLoginByPhone>{
+        phone:formValue.phone,
+        code: formValue.code
+    }
+    let result:ResponseLoginType = await loginByPhoneCode(data)
+    if (result.code===200){
+        SET_XYT_TOKEN(JSON.stringify(result.data))
+        userStore.changeLoginVisiabe();
+        ElMessage({
+            type: 'success',
+            message: ('登陆成功'),
+        });
+    }else{
+        ElMessage({
+            type: 'error',
+            message: ('出错了：' + result.msg),
+        });
     }
 }
 </script>

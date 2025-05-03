@@ -105,3 +105,22 @@ export interface ResponseHospitalRegion extends ResponseData{
 export interface ResponseHospitalDepartment extends ResponseData{
     data: HospitalDepartment1[]
 }
+
+// 接口返回的手机验证码类型
+export interface ResponsePhoneCode extends ResponseData{
+    data: string
+}
+
+// 验证码登录时的请求体类型
+export interface RequestLoginByPhone {
+    phone: string,
+    code: string,
+}
+
+// 验证码登录时的请求体类型
+export interface ResponseLoginType extends ResponseData{
+    data: {
+        name: string,
+        token: string,
+    }
+}
