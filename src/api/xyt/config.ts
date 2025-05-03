@@ -11,4 +11,5 @@ export const API_CONFIG_XYT = {
     // user
     getPhoneCodeApi: `${BASE_URL_XYT}/user/phone/code`,
     loginWithPhoneApi: `${BASE_URL_XYT}/user/login/phone`,
+    getWechatLoginParamApi: `${BASE_URL_XYT}/user/login/wechat/param`,
 }

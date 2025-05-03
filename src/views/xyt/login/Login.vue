@@ -33,10 +33,13 @@
                 </div>
                 <!-- 微信扫码登录 -->
                 <div class="webchat" v-show="scene == LoginScene.WeChat">
-                    <p>微信扫码登录页面</p>
+                    <p>请用微信扫描下面的二维码：</p>
+                    <div id="qr_container" v-if="isShowQRCode">
+                        <img src="@/assets/imgs/xyt/wechat_payment_code.png" alt="">
+                    </div>
                     <div class="userlogin" @click="changeScene">
                         <span>短信登录</span>
-                        <svg t="1746152837240" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17295" width="24" height="24"><path d="M768 0a128 128 0 0 1 128 128v768a128 128 0 0 1-128 128H256a128 128 0 0 1-128-128V128a128 128 0 0 1 128-128h512z m0 64H256a64 64 0 0 0-63.552 56.512L192 128v768a64 64 0 0 0 56.512 63.552L256 960h512a64 64 0 0 0 63.552-56.512L832 896V128a64 64 0 0 0-64-64zM512 768a64 64 0 1 1 0 128 64 64 0 0 1 0-128z" fill="#1afa29" p-id="17296"></path></svg>
+                        <svg t="1746280504742" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="24719" width="32" height="32"><path d="M511.9 714.6m-35.3 0a35.3 35.3 0 1 0 70.6 0 35.3 35.3 0 1 0-70.6 0Z" fill="#65DB79" p-id="24720"></path><path d="M644.4 265.8h-265c-11.8 0-21.5 9.1-21.5 20.2v345.8c0.8-0.1 1.5-0.2 2.3-0.2h302.7c1 0 2 0.2 3 0.3V286.1c0-11.2-9.7-20.3-21.5-20.3z" fill="#65DB79" p-id="24721"></path><path d="M511.9 64.2c-247.2 0-447.7 200.4-447.7 447.7s200.4 447.7 447.7 447.7c247.2 0 447.7-200.4 447.7-447.7S759.1 64.2 511.9 64.2z m197 673.5c0 33.4-29 60.7-64.5 60.7h-265c-35.5 0-64.5-27.3-64.5-60.7V286.1c0-33.4 29-60.7 64.5-60.7h265c35.5 0 64.5 27.3 64.5 60.7v451.6z" fill="#65DB79" p-id="24722"></path></svg>
                     </div>
                 </div>
             </el-col>
@@ -75,10 +78,9 @@ import { ElMessage } from 'element-plus'
 import {useUserStore} from '@/store/xyt/user'
 import { User,Lock } from '@element-plus/icons-vue'
 import { ref, reactive, computed, watch } from 'vue'
-import type {ResponsePhoneCode,RequestLoginByPhone,ResponseLoginType} from '@/api/xyt/type'
-import {getPhoneCode,loginByPhoneCode} from '@/api/xyt/user/user'
+import type {ResponsePhoneCode,RequestLoginByPhone,ResponseLoginType,WXLoginResponseData} from '@/api/xyt/type'
+import {getPhoneCode,loginByPhoneCode,getWechatLoginParam} from '@/api/xyt/user/user'
 import Countdown from '@/components/xyt/Countdown.vue'
-import { SET_XYT_TOKEN } from '@/utils/token'
 
 enum LoginScene {
     Phone = 0,
@@ -101,7 +103,7 @@ let isPhone = computed(()=>{
     return reg.test(formValue.phone);
 })
 let isDisableLoginButton = ref<boolean>(true)
-
+let isShowQRCode = ref<boolean>(false)
 watch([()=>formValue.phone, ()=>formValue.code], ()=>{
     form.value.validate((valid:any)=>{
         if (valid && countdownFlag.value) {
@@ -118,10 +120,35 @@ const closeDialogCallback = ()=>{
     userStore.loginVisiabe=false;
 }
 
-const changeScene = ()=>{
+const changeScene = async ()=>{
     if (scene.value == LoginScene.Phone){
         scene.value = LoginScene.WeChat
+        let redirect_URL = encodeURIComponent(window.location.origin + "/wxlogin");
+        let result: WXLoginResponseData = await getWechatLoginParam(redirect_URL);
+        if(result.code===200 && result.data.redirectUri!=''){
+            //生成微信扫码登录二维码页面
+            //@ts-ignore
+            new WxLogin({
+                self_redirect: true, //true:手机点击确认登录后可以在 iframe 内跳转到 redirect_uri
+                id: "qr_container", //显示二维码容器设置
+                appid: result.data.appid, //应用位置标识appid
+                scope: "snsapi_login", //当前微信扫码登录页面已经授权了
+                redirect_uri: result.data.redirectUri, //填写授权回调域路径,就是用户授权成功以后，微信服务器向公司后台推送code地址
+                state: result.data.state, //state就是后端服务重定向的地址携带用户信息
+                style: "black",//二维码颜色
+                href: "",
+            });
+            isShowQRCode.value=true
+        }else{
+            ElMessage({
+                type: 'warning',
+                message: '微信要300块提供服务,付款立马提供服务!',
+            })
+            isShowQRCode.value=true
+        }
     }else{
+        form.value.resetFields()
+        isShowQRCode.value=false
         scene.value = LoginScene.Phone
     }
 }
@@ -214,7 +241,12 @@ const rules = reactive({
         padding: 20px;
         border: 1px solid #ccc;
     }
-    .webchat {
+    #qr_container img {
+        width: 200px; /* 或者 100% 看你想不想自适应 */
+        height: auto; /* 保持宽高比 */
+        display: block; /* 避免空隙 */
+        margin: 0 auto; /* 居中 */
+        max-width: 100%;
     }
     .userlogin{
         width: 15%;
