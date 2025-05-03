@@ -12,7 +12,7 @@
             </router-view>
         </div>
         <!-- 登录组件 -->
-        <Login />
+        <Login v-if="userStore.loginVisiabe"/>
         <!-- 全局底部组件 -->
         <HospitalBottom />
     </div>
@@ -22,6 +22,8 @@
 import HospitalTop from '@/components/xyt/HospitalTop.vue'
 import HospitalBottom from '@/components/xyt/HospitalBottom.vue'
 import Login from '@/views/xyt/login/Login.vue'
+import {useUserStore} from '@/store/xyt/user'
+let userStore = useUserStore();
 </script>
 
 <style scoped lang="scss">

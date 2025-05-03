@@ -118,9 +118,12 @@ export interface RequestLoginByPhone {
 }
 
 // 验证码登录时的请求体类型
+export interface UserInfoType {
+    name: string,
+    token: string,
+}
+
+// 验证码登录时的请求体类型
 export interface ResponseLoginType extends ResponseData{
-    data: {
-        name: string,
-        token: string,
-    }
+    data: UserInfoType
 }

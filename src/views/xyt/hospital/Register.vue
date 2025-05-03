@@ -72,7 +72,7 @@ const changeIndex = (index:number)=>{
 }
 
 const login=()=>{
-    userStore.changeLoginVisiabe();
+    userStore.loginVisiabe=true;
 }
 </script>
 
