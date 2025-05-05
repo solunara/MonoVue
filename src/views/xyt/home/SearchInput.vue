@@ -34,7 +34,6 @@ const fetchData = async (keyword:string, callback:any)=>{
 }
 
 const goHosDetail = (item: any)=>{
-    console.log(item);
     $router.push({
         path: '/xyt/hospital/detail',
         query: {

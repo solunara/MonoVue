@@ -18,7 +18,6 @@ export const useHosDetailStore = defineStore('HosDetail', {
             if(result.code === 200){
                 this.hospitalDetail=result.data;
             }
-            console.log(this.hospitalDetail);
         },
 
         async getHospitalDepartment(){
@@ -26,7 +25,6 @@ export const useHosDetailStore = defineStore('HosDetail', {
             if(result.code === 200){
                 this.departmentList=result.data;
             }
-            console.log(this.departmentList);
         }
     }
 })

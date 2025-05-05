@@ -41,10 +41,10 @@
                 </el-col>
             </el-row>
         </div>
-        <!-- 底部全局组件 -->
+        <!-- 底部全局组件
         <div class="bottom">
             footer
-        </div>
+        </div> -->
     </div>
 </template>
 
