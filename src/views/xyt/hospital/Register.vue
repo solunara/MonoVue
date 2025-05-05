@@ -41,7 +41,7 @@
                 <div class="showDepartment" v-for="dpt in hosDetail.getDepartmentList" :key="dpt.uid">
                     <p class="cur"> {{ dpt.name }}</p>
                     <ul>
-                        <li v-for="item in dpt.children" :key="item.uid" @click="login(item.uid)">{{ item.name }}</li>
+                        <li v-for="item in dpt.children" :key="item.uid" @click="goToRegister2(item.uid)">{{ item.name }}</li>
                     </ul>
                 </div>
             </div>
@@ -71,12 +71,12 @@ const changeIndex = (index:number)=>{
     })
 }
 
-const login=(departmentid:string)=>{
+const goToRegister2=(deptId:string)=>{
     $router.push({
         path: '/xyt/hospital/register2',
         query: {
             hosId: $route.query.uid,
-            departmentId: departmentid,
+            deptId: deptId,
         }
     })
 }

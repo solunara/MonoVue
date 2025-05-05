@@ -139,3 +139,38 @@ export interface WXLogin {
 export interface WXLoginResponseData extends ResponseData {
     data: WXLogin
 }
+
+
+// 医生排班信息类型
+export interface DocScheduler {
+	docId:string,
+	timeSlot:string,
+	doctorName:string,
+	rank:string,
+	profile:string,
+    amount:number,
+	maxPatients:number,
+	registered:number,
+}
+
+// 科室排班信息
+export interface DeptScheduler {
+	date:string,
+	weekday:number,
+	remain:number,
+	docScheduler:DocScheduler[],
+}
+
+// 科室排班信息
+export interface ScheduleData {
+    hosName:string,
+    fatherName:string,
+    name:string,
+    total:number,
+    DeptSchedule: DeptScheduler[]
+}
+
+// 接口返回的科室排班信息
+export interface ScheduleInfo extends ResponseData {
+    data:ScheduleData
+}
