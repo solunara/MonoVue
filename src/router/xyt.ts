@@ -81,6 +81,38 @@ export const routes_xyt = [
                     },
                 ]
             },
+            {
+                path: 'xytuser',
+                name: 'xytuser',
+                component: () => import('@/views/xyt/user/Index.vue'),
+                children: [
+                    {
+                        path: 'certification',
+                        name: 'certification',
+                        component: () => import('@/views/xyt/user/Certification.vue')
+                    },
+                    {
+                        path: 'order',
+                        name: 'order',
+                        component: () => import('@/views/xyt/user/Order.vue')
+                    },
+                    {
+                        path: 'patient',
+                        name: 'patient',
+                        component: () => import('@/views/xyt/user/Patient.vue')
+                    },
+                    {
+                        path: 'profile',
+                        name: 'profile',
+                        component: () => import('@/views/xyt/user/Profile.vue')
+                    },
+                    {
+                        path: 'feedback',
+                        name: 'feedback',
+                        component: () => import('@/views/xyt/user/Feedback.vue')
+                    },
+                ]
+            },
         ]
     },
 ]
