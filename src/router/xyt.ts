@@ -59,6 +59,26 @@ export const routes_xyt = [
                             next()
                         }
                     },
+                    {
+                        path: 'register3',
+                        name: 'register3',
+                        component: () => import('@/views/xyt/hospital/RegisterThree.vue'),
+                        beforeEnter(to:any, from:any, next:any){
+                            const tokenStr = GET_XYT_TOKEN()
+                            if (tokenStr==null || tokenStr==''){
+                                next('/xyt/hospital/register?uid='+from.query.uid+'&deptId='+from.query.deptId)
+                                useUserStore().loginVisiabe=true
+                                return
+                            }
+                            const userInfoType =  JSON.parse(tokenStr as string) as UserInfoType
+                            if (userInfoType == null || userInfoType.name == ''){
+                                next('/xyt/hospital/register?uid='+from.query.uid+'&deptId='+from.query.deptId)
+                                useUserStore().loginVisiabe=true
+                                return
+                            }
+                            next()
+                        }
+                    },
                 ]
             },
         ]
