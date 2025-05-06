@@ -174,3 +174,11 @@ export interface ScheduleData {
 export interface ScheduleInfo extends ResponseData {
     data:ScheduleData
 }
+
+// 实名认证用户类型
+export interface UserParams {
+    certificatesNo:string,
+    certificatesType:string,
+    certificatesUrl:string,
+    name:string,
+}
