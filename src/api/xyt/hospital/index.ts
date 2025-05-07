@@ -3,14 +3,16 @@ import request  from "@/api/request.js";
 import type {
     RespHospitalDetailType,
     ResponseHospitalDepartment,
-    ScheduleInfo
+    ScheduleInfo,
+    ResponsePatientsData,
+    ResponseRegisterDoctorData,
 } from '@/api/xyt/type'
 
-// 根据uid获取医院信息
-export const getHospitalByUid = (uid:string) => request.get<any, RespHospitalDetailType>(
+// 根据hosId获取医院信息
+export const getHospitalByHosId = (hosId:string) => request.get<any, RespHospitalDetailType>(
     API_CONFIG_XYT.getHospitalDetailApi, {
         params: {
-            uid: uid,
+            hosId: hosId,
         }
     })
 
@@ -26,5 +28,23 @@ export const getHospitalScheduler = (hosId:string, deptId:string, pageNo:number 
             deptId:deptId,
             pageNo:pageNo,
             pageSize:pageSize,
+        }
+    })
+    
+// 获取用户的就诊人列表
+export const getPatientData = (userId:string) => request.get<any, ResponsePatientsData>(
+    API_CONFIG_XYT.getPatientsApi,{
+        params: {
+            userId: userId,
+        }
+    })
+
+// getRegisterDoctorApi
+export const getRegisterDoctor = (hosId:string, docId:string, workDay:string) => request.get<any, ResponseRegisterDoctorData>(
+    API_CONFIG_XYT.getRegisterDoctorApi,{
+        params: {
+            hosId: hosId,
+            docId: docId,
+            workDay: workDay,
         }
     })

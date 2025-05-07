@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import {getHospitalByUid, getHospitalDepartment} from '@/api/xyt/hospital/index'
+import {getHospitalByHosId, getHospitalDepartment} from '@/api/xyt/hospital/index'
 import type {HospitalType,RespHospitalDetailType,HospitalDepartment1,ResponseHospitalDepartment} from '@/api/xyt/type'
 export const useHosDetailStore = defineStore('HosDetail', {
     state: ()=>{
@@ -9,12 +9,10 @@ export const useHosDetailStore = defineStore('HosDetail', {
         }
     },
     getters: {
-        getHospitalDetail: state => state.hospitalDetail,
-        getDepartmentList: state => state.departmentList, 
     },
     actions: {
-        async getHospitalUid(uid:string){
-            let result:RespHospitalDetailType = await getHospitalByUid(uid)
+        async getHospitalDetail(hosId:string){
+            let result:RespHospitalDetailType = await getHospitalByHosId(hosId)
             if(result.code === 200){
                 this.hospitalDetail=result.data;
             }

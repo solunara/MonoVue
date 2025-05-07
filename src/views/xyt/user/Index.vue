@@ -9,23 +9,23 @@
                 :default-active=" $route.path"
                 class="el-menu-vertical-demo"
             >
-                <el-menu-item index="/xyt/xytuser/certification" @click="goTo('/xyt/xytuser/certification', { uid: (($route.query.uid ?? '') as string) })">
+                <el-menu-item index="/xyt/xytuser/certification" @click="goTo('/xyt/xytuser/certification')">
                     <el-icon><Document /></el-icon>
                     <span>实名认证</span>
                 </el-menu-item>
-                <el-menu-item index="/xyt/xytuser/order" @click="goTo('/xyt/xytuser/order', { uid: (($route.query.uid ?? '') as string) })">
+                <el-menu-item index="/xyt/xytuser/order" @click="goTo('/xyt/xytuser/order')">
                     <el-icon><Setting /></el-icon>
                     <span>挂号订单</span>
                 </el-menu-item>
-                <el-menu-item index="/xyt/xytuser/patient" @click="goTo('/xyt/xytuser/patient', { uid: (($route.query.uid ?? '') as string) })">
+                <el-menu-item index="/xyt/xytuser/patient" @click="goTo('/xyt/xytuser/patient')">
                     <el-icon><icon-menu /></el-icon>
                     <span>就诊人管理</span>
                 </el-menu-item>
-                <el-menu-item index="/xyt/xytuser/profile" @click="goTo('/xyt/xytuser/profile', { uid: (($route.query.uid ?? '') as string) })">
+                <el-menu-item index="/xyt/xytuser/profile" @click="goTo('/xyt/xytuser/profile')">
                     <el-icon><InfoFilled /></el-icon>
                     <span>账号信息</span>
                 </el-menu-item>
-                <el-menu-item index="/xyt/xytuser/feedback" @click="goTo('/xyt/xytuser/feedback', { uid: (($route.query.uid ?? '') as string) })">
+                <el-menu-item index="/xyt/xytuser/feedback" @click="goTo('/xyt/xytuser/feedback')">
                     <el-icon><InfoFilled /></el-icon>
                     <span>意见反馈</span>
                 </el-menu-item>
@@ -44,8 +44,8 @@ import { InfoFilled, Menu as IconMenu, Document, Setting, HomeFilled} from '@ele
 const $route = useRoute();
 const $router = useRouter();
 
-const goTo = (path:string, query?: Record<string, string>)=>{
-    $router.push({ path, query })
+const goTo = (path:string)=>{
+    $router.push({ path, query: { userId: $route.query.userId } })
 }
 </script>
 
@@ -66,7 +66,7 @@ const goTo = (path:string, query?: Record<string, string>)=>{
     .usermenu {
         flex: 2;
         flex-direction: column;
-        align-items: center;
+        align-items: baseline;
     }
 
     .content {

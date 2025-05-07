@@ -1,7 +1,7 @@
 <template>
     <div class="notice">
         <h1 class="hosname">
-        {{ hosDetail.getHospitalDetail?.full_name }}预约挂号须知
+        {{ hosDetail.hospitalDetail?.full_name }}预约挂号须知
         </h1>
         <div class="top">为方便您早日就医康复，请您认真阅读预约挂号须知:</div>
         <div class="info">

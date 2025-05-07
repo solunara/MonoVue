@@ -11,7 +11,14 @@
             </template>
             <!-- 展示就诊人信息 -->
                 <div class="user">
-                <Visitor v-for="item in 4" :key="item" />
+                    <Visitor 
+                        v-for="(item, index) in patientList" 
+                        :key="item.patientId" 
+                        :user="item" 
+                        :index="index" 
+                        :currentIndex="currentIndex"
+                         @click="changeIndex(index)"
+                    />
                 </div>
         </el-card>
         <!-- 展示医生信息 -->
@@ -34,7 +41,7 @@
                         就诊日期:
                         </div>
                     </template>
-                    xxxx年xx月xx日
+                    {{ registerDoctor?.workDay }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template #label>
@@ -42,7 +49,7 @@
                         就诊医院:
                         </div>
                     </template>
-                    xxxx医院
+                    {{ registerDoctor?.hosName }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template #label>
@@ -50,7 +57,7 @@
                         就诊科室:
                         </div>
                     </template>
-                    xxxx科室
+                    {{ registerDoctor?.deptName }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template #label>
@@ -58,7 +65,7 @@
                         医生姓名:
                         </div>
                     </template>
-                    xxxx医生
+                    {{ registerDoctor?.doctorName }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template #label>
@@ -66,7 +73,7 @@
                         医生职称:
                         </div>
                     </template>
-                    xxxx
+                    {{ registerDoctor?.rank }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template #label>
@@ -74,7 +81,7 @@
                         医生专长:
                         </div>
                     </template>
-                    xxxx
+                    {{ registerDoctor?.profile }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template #label>
@@ -82,13 +89,13 @@
                         医事服务费:
                         </div>
                     </template>
-                    <span style="color:red;">100元</span>
+                    <span style="color:red;">{{ registerDoctor?.amount }}元</span>
                 </el-descriptions-item>
             </el-descriptions>
         </el-card>
         <!-- 确认挂号按钮 -->
         <div class="btn">
-            <el-button type="primary" size="default">
+            <el-button type="primary" size="default" :disabled="currentIndex == -1 ? true : false">
                 确认挂号
             </el-button>
         </div>
@@ -98,7 +105,57 @@
 <script setup lang="ts">
 import {User} from "@element-plus/icons-vue"
 import Visitor from '@/views/xyt/hospital/Visitor.vue'
+import { ref, onMounted } from "vue";
+import {getPatientData,getRegisterDoctor} from '@/api/xyt/hospital/index'
+import type {Patient,ResponsePatientsData,RegisterDoctor,ResponseRegisterDoctorData} from '@/api/xyt/type'
+import { useUserStore } from '@/store/xyt/user'
+import { useRoute } from 'vue-router'
+import { ElMessage } from "element-plus";
 
+const $route = useRoute();
+
+let userInfo = useUserStore();
+let patientList = ref<Patient[]>([])
+let registerDoctor=ref<RegisterDoctor>()
+//存储用户确定就诊人索引值
+let currentIndex = ref<number>(-1);
+
+onMounted(()=>{
+    // 获取就诊人信息
+    getPatientList()
+    // 获取医生信息
+    getDoctorDetail()
+})
+
+const getPatientList = async ()=>{
+    let result:ResponsePatientsData = await getPatientData(userInfo.userInfo.userId);
+    if(result.code==200){
+        patientList.value=result.data
+    }else{
+        ElMessage({
+            type: 'error',
+            message: (result.msg),
+        });
+    }
+}
+
+const getDoctorDetail = async ()=>{
+    let result:ResponseRegisterDoctorData = await getRegisterDoctor(($route.query.hosId) as string, ($route.query.docId) as string, ($route.query.workDay) as string);
+    if(result.code==200){
+        registerDoctor.value=result.data
+    }else{
+        ElMessage({
+            type: 'error',
+            message: (result.msg),
+        });
+    }
+}
+
+//点击就诊人子组件的的回调
+const changeIndex = (index: number) => {
+  //存储当前用户选中就诊人信息索引值
+  currentIndex.value = index;
+};
 </script>
 
 <style scoped lang="scss">
@@ -119,8 +176,8 @@ import Visitor from '@/views/xyt/hospital/Visitor.vue'
             display: flex;
             flex-wrap: wrap;
             .visitor{
-                width: 30%;
-                margin: 5px;
+                width: 25%;
+                margin: 10px;
             }
         }
     }

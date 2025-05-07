@@ -6,27 +6,26 @@ export const useUserStore = defineStore('User', {
     state: ()=>{
         return {
             loginVisiabe: false,
-            userInfa: JSON.parse(GET_XYT_TOKEN() as string) as UserInfoType || <UserInfoType>{
+            userInfo: JSON.parse(GET_XYT_TOKEN() as string) as UserInfoType || <UserInfoType>{
                 name: '',
+                userId: '',
                 token: '',
             }
         }
     },
     getters: {
-        getLoginVisiabe: state => state.loginVisiabe,
-        getUserInfa: state => state.userInfa,
     },
     actions: {
         changeLoginVisiabe(){
             this.loginVisiabe = !this.loginVisiabe;
         },
         setUserInfo(value:UserInfoType){
-            if(value.name=='' || value.token==''){
+            if(value.name=='' || value.userId=='' || value.token==''){
                 REMOVE_XYT_TOKEN();
             }else{
                 SET_XYT_TOKEN(JSON.stringify(value));
             }
-            this.userInfa = value;
+            this.userInfo = value;
         },
     }
 })

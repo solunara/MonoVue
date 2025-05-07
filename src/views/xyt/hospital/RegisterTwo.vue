@@ -3,30 +3,27 @@
         <!-- 顶部结构 -->
         <div class="top">
             <div class="hosname">
-                {{ schedulerData?.hosName }}
+                {{ hosName }}
             </div>
             <div class="line"> | </div>
-            <div class="department">{{ schedulerData?.fatherName }}</div>
+            <div class="department">{{ fatherName }}</div>
             <div class="dot">·</div>
-            <div class="department2">{{ schedulerData?.name }}</div>
+            <div class="department2">{{ deptName }}</div>
         </div>
         <!-- 中间结构 -->
         <div class="center">
             <div class="container">
-                <div class="item" :class="{active: (hasReached3PM()  && isToday(ele.date)) || ele.remain==0}" v-for="ele in schedulerData?.DeptSchedule" :key="ele.date" @click="changeTime(ele.docScheduler)">
+                <div class="item" v-for="ele in deptSchedulerData" :key="ele.date" :class="{active: (hasReached3PM()  && isToday(ele.date)) || ele.remain==0}" @click="changeTime(ele.date, ele.docScheduler)">
                     <div class="header">{{ ele.date }} {{ formatWeek(ele.weekday) }}</div>
                     <div class="bottom">
                         <div class="itemstatus" v-if="(hasReached3PM()  && isToday(ele.date))">
                             停止挂号
                         </div>
-                        <!-- <div class="itemstatus" v-else-if="isAfter7DaysFromTodayStart(ele.workDate)==1">
-                            即将放号
-                        </div> -->
                         <div class="itemstatus" v-else-if="ele.remain>0">
                             剩余({{ ele.remain }})
                         </div>
                         <div class="itemstatus" v-else>
-                            约满了
+                            已约满
                         </div>
                     </div>
                 </div>
@@ -42,6 +39,9 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
             />
+        </div>
+        <div class="selectdata">
+          {{ selectDate }} 医生排班信息：
         </div>
         <!-- 展示医生 -->
          <div class="fotter">
@@ -63,7 +63,7 @@
                     <span class="text">上午号源</span>
                 </div>
                 <!--每一个医生的信息-->
-                <div class="doc_info" v-for="doctor in moringArr" :key="doctor.docId">
+                <div class="doc_info" v-for="doctor in moringArr" :key="doctor.docId" v-if="isSchedulerMorning">
                     <!-- 展示医生的名字|技能 -->
                     <div class="left">
                     <div class="info">
@@ -76,10 +76,13 @@
                     <!-- 右侧区域展示挂号的钱数-->
                     <div class="right">
                     <div class="money">￥{{ doctor.amount }}</div>
-                    <el-button type="primary" size="default" @click="goStep2(doctor)">{{
+                    <el-button type="primary" size="default" :disabled="hasReached3PM()  && isToday(doctor.workDay)"  @click="goStep2(doctor)">{{
                         doctor.maxPatients-doctor.registered
                     }}</el-button>
                     </div>
+                </div>
+                <div v-else>
+                  <p>暂无医生排班</p>
                 </div>
                 </div>
                 <!-- 下午 -->
@@ -100,7 +103,7 @@
                     <span class="text">下午号源</span>
                 </div>
                 <!--每一个医生的信息-->
-                <div class="doc_info" v-for="doctor in afterArr" :key="doctor.docId">
+                <div class="doc_info" v-for="doctor in afterArr" :key="doctor.docId" v-if="isSchedulerAfternoon">
                     <!-- 展示医生的名字|技能 -->
                     <div class="left">
                     <div class="info">
@@ -113,10 +116,13 @@
                     <!-- 右侧区域展示挂号的钱数-->
                     <div class="right">
                     <div class="money">￥{{ doctor.amount }}</div>
-                    <el-button type="primary" size="default" @click="goStep2(doctor)">{{
+                    <el-button type="primary" size="default" :disabled="hasReached3PM()  && isToday(doctor.workDay)" @click="goStep2(doctor)">{{
                         doctor.maxPatients-doctor.registered
                     }}</el-button>
                     </div>
+                </div>
+                <div v-else>
+                  <p>暂无医生排班</p>
                 </div>
                 </div>
             </div>
@@ -128,17 +134,22 @@
 import {onMounted, ref} from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {getHospitalScheduler} from '@/api/xyt/hospital/index'
-import type {DocScheduler,ScheduleData,ScheduleInfo} from '@/api/xyt/type'
+import type {DocScheduler,DeptScheduler,ScheduleInfo} from '@/api/xyt/type'
 
 const $router = useRouter();
 const $route = useRoute();
 let pageNo = ref<number>(1)
 let pageSize = ref<number>(4)
 let total = ref<number>(0)
-let schedulerData = ref<ScheduleData>()
+let hosName = ref<string>('')
+let fatherName = ref<string>('')
+let deptName = ref<string>('')
+let deptSchedulerData = ref<DeptScheduler[]>([])
 let moringArr = ref<DocScheduler[]>([])
 let afterArr = ref<DocScheduler[]>([])
-
+let selectDate = ref<string>('')
+let isSchedulerMorning = ref<boolean>(true)
+let isSchedulerAfternoon = ref<boolean>(true)
 onMounted(()=>{
     getHospitalRegistrationList();
 })
@@ -146,20 +157,50 @@ onMounted(()=>{
 const getHospitalRegistrationList = async ()=>{
     let result:ScheduleInfo = await getHospitalScheduler(($route.query.hosId??'') as string, ($route.query.deptId??'') as string, pageNo.value, pageSize.value)
     if (result.code===200){
-        schedulerData.value = result.data
+        hosName.value = result.data.hosName
+        fatherName.value = result.data.fatherName
+        deptName.value = result.data.name
+        deptSchedulerData.value = result.data.deptSchedule
         total.value = result.data.total
-    }
-    console.log(result);
+        selectDate.value = result.data.deptSchedule[0].date
+        moringArr.value = result.data.deptSchedule[0].docScheduler.filter((doc: DocScheduler) => {
+            return doc.timeSlot == '上午';
+        });
+        if(moringArr.value.length>0){
+          isSchedulerMorning.value=true
+        }else{
+          isSchedulerMorning.value=false
+        }
+        afterArr.value = result.data.deptSchedule[0].docScheduler.filter((doc: DocScheduler) => {
+            return doc.timeSlot == '下午';
+        });
+        if(afterArr.value.length>0){
+          isSchedulerAfternoon.value=true
+        }else{
+          isSchedulerAfternoon.value=false
+        }
+    }   
 }
 
 //点击顶部某一天的时候触发回调
-const changeTime = (item: DocScheduler[]) => {
+const changeTime = (date: string, item: DocScheduler[]) => {
+  selectDate.value = date
   moringArr.value = item.filter((doc: DocScheduler) => {
       return doc.timeSlot == '上午';
   });
+  if(moringArr.value.length>0){
+    isSchedulerMorning.value=true
+  }else{
+    isSchedulerMorning.value=false
+  }
   afterArr.value = item.filter((doc: DocScheduler) => {
       return doc.timeSlot == '下午';
   });
+  if(afterArr.value.length>0){
+    isSchedulerAfternoon.value=true
+  }else{
+    isSchedulerAfternoon.value=false
+  }
 };
 
 function handleSizeChange() {
@@ -209,7 +250,14 @@ const isToday = (dateStr:string) => {
 //路由跳转进入到选择就诊人页面
 const goStep2 = (doctor: DocScheduler) => {
     //编程式导航进行路由跳转且携带医生的ID
-    $router.push({ path: "/hospital/register3", query: { docId: doctor.docId } });
+    $router.push({ 
+      path: "/xyt/hospital/register3", 
+      query: {
+          hosId: $route.query.hosId,
+          docId: doctor.docId,
+          workDay: doctor.workDay,
+      }
+    });
 };
 </script>
 
@@ -277,6 +325,10 @@ const goStep2 = (doctor: DocScheduler) => {
       }
     }
     .doctor {
+      p {
+        margin: 20px 0 20px 0;
+        color: #7f7f7f;
+      }
       .moring {
         .tip {
           display: flex;
@@ -319,6 +371,12 @@ const goStep2 = (doctor: DocScheduler) => {
         }
       }
     }
+  }
+  .selectdata{
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #7f7f7f;
+    font-size: 18px;
   }
 }
 </style>

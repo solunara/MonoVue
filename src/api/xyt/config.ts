@@ -1,4 +1,4 @@
-const BASE_URL_XYT = "http://6be3125c.r3.cpolar.cn/xyt"
+const BASE_URL_XYT = "http://7480bf5a.r28.cpolar.top/xyt"
 
 export const API_CONFIG_XYT = {
     // hospital
@@ -8,7 +8,9 @@ export const API_CONFIG_XYT = {
     getHospitalDetailApi: `${BASE_URL_XYT}/hos/detail`,
     getHospitalDepartmentApi: `${BASE_URL_XYT}/hos/department`,
     getHospitalSchedulerApi: `${BASE_URL_XYT}/hos/scheduler`,
-
+    getPatientsApi: `${BASE_URL_XYT}/hos/patient/list`,
+    getRegisterDoctorApi: `${BASE_URL_XYT}/hos/register/doctor`,
+    
     // user
     getPhoneCodeApi: `${BASE_URL_XYT}/user/phone/code`,
     loginWithPhoneApi: `${BASE_URL_XYT}/user/login/phone`,

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="info">
-            <h1>{{ hosDetail.getHospitalDetail?.full_name }}停诊信息</h1>
+            <h1>{{ hosDetail.hospitalDetail?.short_name }}停诊信息</h1>
             <el-empty description="暂无信息" />
         </div>
     </div>

@@ -28,7 +28,7 @@ const fetchData = async (keyword:string, callback:any)=>{
     hosname.value=keyword;
     let result:RespHospitalListType = await getHospitalListByName(keyword);
     if(result.code==200){
-        let showData = result.data.map(item=>{return { value: item.full_name, hosuid: item.uid}})
+        let showData = result.data.map(item=>{return { value: item.full_name, hosId: item.uid}})
         callback(showData)
     }
 }
@@ -37,7 +37,7 @@ const goHosDetail = (item: any)=>{
     $router.push({
         path: '/xyt/hospital/detail',
         query: {
-            uid: item.hosuid,
+            hosId: item.hosId,
         }
     })
 }
