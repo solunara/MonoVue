@@ -253,9 +253,7 @@ const goStep2 = (doctor: DocScheduler) => {
     $router.push({ 
       path: "/xyt/hospital/register3", 
       query: {
-          hosId: $route.query.hosId,
-          docId: doctor.docId,
-          workDay: doctor.workDay,
+          scheId: doctor.scheId,
       }
     });
 };

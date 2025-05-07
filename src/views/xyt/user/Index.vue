@@ -65,8 +65,9 @@ const goTo = (path:string)=>{
     
     .usermenu {
         flex: 2;
+        display: flex;
         flex-direction: column;
-        align-items: baseline;
+        align-items: baseline ;
     }
 
     .content {
