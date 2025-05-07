@@ -3,26 +3,26 @@
         <div class="top">
             <div class="left">
                 <span class="free">医保</span>
-                <span class="username">user_xxx</span>
+                <span class="username">{{ user.name }}</span>
             </div>
             <div class="right">
                 <el-button type="primary" size="default" :icon="Edit" circle></el-button>
             </div>
         </div>
         <div class="bottom">
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
+            <p>证件类型: 身份证</p>
+            <p>证件号码: {{ user.idNumber }}</p>
+            <p>用户性别: {{ user.sex == 0 ? "女" : "男" }}</p>
+            <p>出生日期: {{ user.birthday }}</p>
+            <p>手机号码: {{ user.phone }}</p>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import {Edit} from "@element-plus/icons-vue"
+
+let props = defineProps(["user"])
 </script>
 
 <style scoped>

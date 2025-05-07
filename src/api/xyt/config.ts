@@ -8,7 +8,9 @@ export const API_CONFIG_XYT = {
     getHospitalDetailApi: `${BASE_URL_XYT}/hos/detail`,
     getHospitalDepartmentApi: `${BASE_URL_XYT}/hos/department`,
     getHospitalSchedulerApi: `${BASE_URL_XYT}/hos/scheduler`,
-
+    getPatientsApi: `${BASE_URL_XYT}/hos/patient/list`,
+    getRegisterDoctorApi: `${BASE_URL_XYT}/hos/register/doctor`,
+    
     // user
     getPhoneCodeApi: `${BASE_URL_XYT}/user/phone/code`,
     loginWithPhoneApi: `${BASE_URL_XYT}/user/login/phone`,

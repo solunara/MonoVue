@@ -120,6 +120,7 @@ export interface RequestLoginByPhone {
 // 验证码登录时的请求体类型
 export interface UserInfoType {
     name: string,
+    userId: string,
     token: string,
 }
 
@@ -148,6 +149,7 @@ export interface DocScheduler {
 	doctorName:string,
 	rank:string,
 	profile:string,
+    workDay:string,
     amount:number,
 	maxPatients:number,
 	registered:number,
@@ -181,4 +183,38 @@ export interface UserParams {
     certificatesType:string,
     certificatesUrl:string,
     name:string,
+}
+
+// 就诊人信息类型
+export interface Patient {
+    id:number,
+	userId:string,
+	patientId:string,
+    idNumber:string,
+	name:string,
+	birthday:string,
+	phone:string,
+	sex:boolean,
+}
+
+// 接口返回的就诊人信息列表
+export interface ResponsePatientsData extends ResponseData {
+    data:Patient[],
+}
+
+// 挂号中医生信息类型
+export interface RegisterDoctor {
+    docId:      string,
+	doctorName: string,
+	rank:       string,
+	profile:    string,
+	workDay:    string,
+	hosName:    string,
+	deptName:   string,
+	amount:     number,
+}
+
+// 接口返回的挂号中医生信息类型
+export interface ResponseRegisterDoctorData extends ResponseData {
+    data:RegisterDoctor,
 }

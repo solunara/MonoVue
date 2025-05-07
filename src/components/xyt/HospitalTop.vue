@@ -6,10 +6,10 @@
             </div>
             <div class="right">
                 <p class="help">帮助信息</p>
-                <p class="login" @click="login" v-if="userStore.getUserInfa.name===''">登陆/注册</p>
+                <p class="login" @click="login" v-if="userStore.userInfo.name===''">登陆/注册</p>
                 <el-dropdown class="login" v-else>
                     <span class="el-dropdown-link">
-                        {{ userStore.getUserInfa.name }}
+                        {{ userStore.userInfo.name }}
                         <el-icon class="el-icon--right">
                             <arrow-down />
                         </el-icon>

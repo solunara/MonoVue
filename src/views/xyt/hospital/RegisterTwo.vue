@@ -13,20 +13,17 @@
         <!-- 中间结构 -->
         <div class="center">
             <div class="container">
-                <div class="item"  v-for="ele in deptSchedulerData" :key="ele.date" :class="{active: (hasReached3PM()  && isToday(ele.date)) || ele.remain==0}" @click="changeTime(ele.docScheduler)">
+                <div class="item" v-for="ele in deptSchedulerData" :key="ele.date" :class="{active: (hasReached3PM()  && isToday(ele.date)) || ele.remain==0}" @click="changeTime(ele.date, ele.docScheduler)">
                     <div class="header">{{ ele.date }} {{ formatWeek(ele.weekday) }}</div>
                     <div class="bottom">
                         <div class="itemstatus" v-if="(hasReached3PM()  && isToday(ele.date))">
                             停止挂号
                         </div>
-                        <!-- <div class="itemstatus" v-else-if="isAfter7DaysFromTodayStart(ele.workDate)==1">
-                            即将放号
-                        </div> -->
                         <div class="itemstatus" v-else-if="ele.remain>0">
                             剩余({{ ele.remain }})
                         </div>
                         <div class="itemstatus" v-else>
-                            约满了
+                            已约满
                         </div>
                     </div>
                 </div>
@@ -42,6 +39,9 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
             />
+        </div>
+        <div class="selectdata">
+          {{ selectDate }} 医生排班信息：
         </div>
         <!-- 展示医生 -->
          <div class="fotter">
@@ -76,7 +76,7 @@
                     <!-- 右侧区域展示挂号的钱数-->
                     <div class="right">
                     <div class="money">￥{{ doctor.amount }}</div>
-                    <el-button type="primary" size="default" @click="goStep2(doctor)">{{
+                    <el-button type="primary" size="default" :disabled="hasReached3PM()  && isToday(doctor.workDay)"  @click="goStep2(doctor)">{{
                         doctor.maxPatients-doctor.registered
                     }}</el-button>
                     </div>
@@ -116,7 +116,7 @@
                     <!-- 右侧区域展示挂号的钱数-->
                     <div class="right">
                     <div class="money">￥{{ doctor.amount }}</div>
-                    <el-button type="primary" size="default" @click="goStep2(doctor)">{{
+                    <el-button type="primary" size="default" :disabled="hasReached3PM()  && isToday(doctor.workDay)" @click="goStep2(doctor)">{{
                         doctor.maxPatients-doctor.registered
                     }}</el-button>
                     </div>
@@ -147,6 +147,7 @@ let deptName = ref<string>('')
 let deptSchedulerData = ref<DeptScheduler[]>([])
 let moringArr = ref<DocScheduler[]>([])
 let afterArr = ref<DocScheduler[]>([])
+let selectDate = ref<string>('')
 let isSchedulerMorning = ref<boolean>(true)
 let isSchedulerAfternoon = ref<boolean>(true)
 onMounted(()=>{
@@ -161,10 +162,7 @@ const getHospitalRegistrationList = async ()=>{
         deptName.value = result.data.name
         deptSchedulerData.value = result.data.deptSchedule
         total.value = result.data.total
-
-        console.log(result);
-
-
+        selectDate.value = result.data.deptSchedule[0].date
         moringArr.value = result.data.deptSchedule[0].docScheduler.filter((doc: DocScheduler) => {
             return doc.timeSlot == '上午';
         });
@@ -181,14 +179,12 @@ const getHospitalRegistrationList = async ()=>{
         }else{
           isSchedulerAfternoon.value=false
         }
-
-        console.log(isSchedulerMorning.value);
-        console.log(isSchedulerAfternoon.value);
     }   
 }
 
 //点击顶部某一天的时候触发回调
-const changeTime = (item: DocScheduler[]) => {
+const changeTime = (date: string, item: DocScheduler[]) => {
+  selectDate.value = date
   moringArr.value = item.filter((doc: DocScheduler) => {
       return doc.timeSlot == '上午';
   });
@@ -254,7 +250,14 @@ const isToday = (dateStr:string) => {
 //路由跳转进入到选择就诊人页面
 const goStep2 = (doctor: DocScheduler) => {
     //编程式导航进行路由跳转且携带医生的ID
-    $router.push({ path: "/hospital/register3", query: { docId: doctor.docId } });
+    $router.push({ 
+      path: "/xyt/hospital/register3", 
+      query: {
+          hosId: $route.query.hosId,
+          docId: doctor.docId,
+          workDay: doctor.workDay,
+      }
+    });
 };
 </script>
 
@@ -368,6 +371,12 @@ const goStep2 = (doctor: DocScheduler) => {
         }
       }
     }
+  }
+  .selectdata{
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #7f7f7f;
+    font-size: 18px;
   }
 }
 </style>
