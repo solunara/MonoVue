@@ -145,6 +145,7 @@ export interface WXLoginResponseData extends ResponseData {
 // 医生排班信息类型
 export interface DocScheduler {
 	docId:string,
+    scheId:string,
 	timeSlot:string,
 	doctorName:string,
 	rank:string,

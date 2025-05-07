@@ -39,12 +39,19 @@ export const getPatientData = (userId:string) => request.get<any, ResponsePatien
         }
     })
 
-// getRegisterDoctorApi
-export const getRegisterDoctor = (hosId:string, docId:string, workDay:string) => request.get<any, ResponseRegisterDoctorData>(
+// getRegisterDoctor
+export const getRegisterDoctor = (scheId:string) => request.get<any, ResponseRegisterDoctorData>(
     API_CONFIG_XYT.getRegisterDoctorApi,{
         params: {
-            hosId: hosId,
-            docId: docId,
-            workDay: workDay,
+            scheId: scheId,
+        }
+    })
+
+    
+//
+export const addOrder = (scheId:string) => request.get<any, ResponseRegisterDoctorData>(
+    API_CONFIG_XYT.addOrderApi,{
+        params: {
+            scheId: scheId,
         }
     })
