@@ -11,7 +11,14 @@
             </template>
             <!-- 展示就诊人信息 -->
                 <div class="user">
-                    <Visitor v-for="item in patientList" :key="item.patientId" :user="item"/>
+                    <Visitor 
+                        v-for="(item, index) in patientList" 
+                        :key="item.patientId" 
+                        :user="item" 
+                        :index="index" 
+                        :currentIndex="currentIndex"
+                         @click="changeIndex(index)"
+                    />
                 </div>
         </el-card>
         <!-- 展示医生信息 -->
@@ -88,7 +95,7 @@
         </el-card>
         <!-- 确认挂号按钮 -->
         <div class="btn">
-            <el-button type="primary" size="default">
+            <el-button type="primary" size="default" :disabled="currentIndex == -1 ? true : false">
                 确认挂号
             </el-button>
         </div>
@@ -110,6 +117,8 @@ const $route = useRoute();
 let userInfo = useUserStore();
 let patientList = ref<Patient[]>([])
 let registerDoctor=ref<RegisterDoctor>()
+//存储用户确定就诊人索引值
+let currentIndex = ref<number>(-1);
 
 onMounted(()=>{
     // 获取就诊人信息
@@ -142,6 +151,11 @@ const getDoctorDetail = async ()=>{
     }
 }
 
+//点击就诊人子组件的的回调
+const changeIndex = (index: number) => {
+  //存储当前用户选中就诊人信息索引值
+  currentIndex.value = index;
+};
 </script>
 
 <style scoped lang="scss">
