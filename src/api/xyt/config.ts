@@ -1,4 +1,4 @@
-const BASE_URL_XYT = "http://6be3125c.r3.cpolar.cn/xyt"
+const BASE_URL_XYT = "http://7480bf5a.r28.cpolar.top/xyt"
 
 export const API_CONFIG_XYT = {
     // hospital

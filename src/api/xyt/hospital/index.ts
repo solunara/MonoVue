@@ -6,11 +6,11 @@ import type {
     ScheduleInfo
 } from '@/api/xyt/type'
 
-// 根据uid获取医院信息
-export const getHospitalByUid = (uid:string) => request.get<any, RespHospitalDetailType>(
+// 根据hosId获取医院信息
+export const getHospitalByHosId = (hosId:string) => request.get<any, RespHospitalDetailType>(
     API_CONFIG_XYT.getHospitalDetailApi, {
         params: {
-            uid: uid,
+            hosId: hosId,
         }
     })
 

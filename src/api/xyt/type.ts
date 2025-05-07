@@ -167,12 +167,12 @@ export interface ScheduleData {
     fatherName:string,
     name:string,
     total:number,
-    DeptSchedule: DeptScheduler[]
+    deptSchedule: DeptScheduler[],
 }
 
 // 接口返回的科室排班信息
 export interface ScheduleInfo extends ResponseData {
-    data:ScheduleData
+    data:ScheduleData,
 }
 
 // 实名认证用户类型

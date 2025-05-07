@@ -3,17 +3,17 @@
         <!-- 顶部结构 -->
         <div class="top">
             <div class="hosname">
-                {{ schedulerData?.hosName }}
+                {{ hosName }}
             </div>
             <div class="line"> | </div>
-            <div class="department">{{ schedulerData?.fatherName }}</div>
+            <div class="department">{{ fatherName }}</div>
             <div class="dot">·</div>
-            <div class="department2">{{ schedulerData?.name }}</div>
+            <div class="department2">{{ deptName }}</div>
         </div>
         <!-- 中间结构 -->
         <div class="center">
             <div class="container">
-                <div class="item" :class="{active: (hasReached3PM()  && isToday(ele.date)) || ele.remain==0}" v-for="ele in schedulerData?.DeptSchedule" :key="ele.date" @click="changeTime(ele.docScheduler)">
+                <div class="item"  v-for="ele in deptSchedulerData" :key="ele.date" :class="{active: (hasReached3PM()  && isToday(ele.date)) || ele.remain==0}" @click="changeTime(ele.docScheduler)">
                     <div class="header">{{ ele.date }} {{ formatWeek(ele.weekday) }}</div>
                     <div class="bottom">
                         <div class="itemstatus" v-if="(hasReached3PM()  && isToday(ele.date))">
@@ -63,7 +63,7 @@
                     <span class="text">上午号源</span>
                 </div>
                 <!--每一个医生的信息-->
-                <div class="doc_info" v-for="doctor in moringArr" :key="doctor.docId">
+                <div class="doc_info" v-for="doctor in moringArr" :key="doctor.docId" v-if="isSchedulerMorning">
                     <!-- 展示医生的名字|技能 -->
                     <div class="left">
                     <div class="info">
@@ -80,6 +80,9 @@
                         doctor.maxPatients-doctor.registered
                     }}</el-button>
                     </div>
+                </div>
+                <div v-else>
+                  <p>暂无医生排班</p>
                 </div>
                 </div>
                 <!-- 下午 -->
@@ -100,7 +103,7 @@
                     <span class="text">下午号源</span>
                 </div>
                 <!--每一个医生的信息-->
-                <div class="doc_info" v-for="doctor in afterArr" :key="doctor.docId">
+                <div class="doc_info" v-for="doctor in afterArr" :key="doctor.docId" v-if="isSchedulerAfternoon">
                     <!-- 展示医生的名字|技能 -->
                     <div class="left">
                     <div class="info">
@@ -118,6 +121,9 @@
                     }}</el-button>
                     </div>
                 </div>
+                <div v-else>
+                  <p>暂无医生排班</p>
+                </div>
                 </div>
             </div>
          </div>
@@ -128,17 +134,21 @@
 import {onMounted, ref} from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {getHospitalScheduler} from '@/api/xyt/hospital/index'
-import type {DocScheduler,ScheduleData,ScheduleInfo} from '@/api/xyt/type'
+import type {DocScheduler,DeptScheduler,ScheduleInfo} from '@/api/xyt/type'
 
 const $router = useRouter();
 const $route = useRoute();
 let pageNo = ref<number>(1)
 let pageSize = ref<number>(4)
 let total = ref<number>(0)
-let schedulerData = ref<ScheduleData>()
+let hosName = ref<string>('')
+let fatherName = ref<string>('')
+let deptName = ref<string>('')
+let deptSchedulerData = ref<DeptScheduler[]>([])
 let moringArr = ref<DocScheduler[]>([])
 let afterArr = ref<DocScheduler[]>([])
-
+let isSchedulerMorning = ref<boolean>(true)
+let isSchedulerAfternoon = ref<boolean>(true)
 onMounted(()=>{
     getHospitalRegistrationList();
 })
@@ -146,10 +156,35 @@ onMounted(()=>{
 const getHospitalRegistrationList = async ()=>{
     let result:ScheduleInfo = await getHospitalScheduler(($route.query.hosId??'') as string, ($route.query.deptId??'') as string, pageNo.value, pageSize.value)
     if (result.code===200){
-        schedulerData.value = result.data
+        hosName.value = result.data.hosName
+        fatherName.value = result.data.fatherName
+        deptName.value = result.data.name
+        deptSchedulerData.value = result.data.deptSchedule
         total.value = result.data.total
-    }
-    console.log(result);
+
+        console.log(result);
+
+
+        moringArr.value = result.data.deptSchedule[0].docScheduler.filter((doc: DocScheduler) => {
+            return doc.timeSlot == '上午';
+        });
+        if(moringArr.value.length>0){
+          isSchedulerMorning.value=true
+        }else{
+          isSchedulerMorning.value=false
+        }
+        afterArr.value = result.data.deptSchedule[0].docScheduler.filter((doc: DocScheduler) => {
+            return doc.timeSlot == '下午';
+        });
+        if(afterArr.value.length>0){
+          isSchedulerAfternoon.value=true
+        }else{
+          isSchedulerAfternoon.value=false
+        }
+
+        console.log(isSchedulerMorning.value);
+        console.log(isSchedulerAfternoon.value);
+    }   
 }
 
 //点击顶部某一天的时候触发回调
@@ -157,9 +192,19 @@ const changeTime = (item: DocScheduler[]) => {
   moringArr.value = item.filter((doc: DocScheduler) => {
       return doc.timeSlot == '上午';
   });
+  if(moringArr.value.length>0){
+    isSchedulerMorning.value=true
+  }else{
+    isSchedulerMorning.value=false
+  }
   afterArr.value = item.filter((doc: DocScheduler) => {
       return doc.timeSlot == '下午';
   });
+  if(afterArr.value.length>0){
+    isSchedulerAfternoon.value=true
+  }else{
+    isSchedulerAfternoon.value=false
+  }
 };
 
 function handleSizeChange() {
@@ -277,6 +322,10 @@ const goStep2 = (doctor: DocScheduler) => {
       }
     }
     .doctor {
+      p {
+        margin: 20px 0 20px 0;
+        color: #7f7f7f;
+      }
       .moring {
         .tip {
           display: flex;

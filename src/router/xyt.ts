@@ -46,13 +46,13 @@ export const routes_xyt = [
                         beforeEnter(to:any, from:any, next:any){
                             const tokenStr = GET_XYT_TOKEN()
                             if (tokenStr==null || tokenStr==''){
-                                next('/xyt/hospital/register?uid='+from.query.uid)
+                                next('/xyt/hospital/register?hosId='+from.query.hosId)
                                 useUserStore().loginVisiabe=true
                                 return
                             }
                             const userInfoType =  JSON.parse(tokenStr as string) as UserInfoType
                             if (userInfoType == null || userInfoType.name == ''){
-                                next('/xyt/hospital/register?uid='+from.query.uid)
+                                next('/xyt/hospital/register?hosId='+from.query.hosId)
                                 useUserStore().loginVisiabe=true
                                 return
                             }
@@ -66,13 +66,13 @@ export const routes_xyt = [
                         beforeEnter(to:any, from:any, next:any){
                             const tokenStr = GET_XYT_TOKEN()
                             if (tokenStr==null || tokenStr==''){
-                                next('/xyt/hospital/register?uid='+from.query.uid+'&deptId='+from.query.deptId)
+                                next('/xyt/hospital/register?hosId='+from.query.hosId+'&deptId='+from.query.deptId)
                                 useUserStore().loginVisiabe=true
                                 return
                             }
                             const userInfoType =  JSON.parse(tokenStr as string) as UserInfoType
                             if (userInfoType == null || userInfoType.name == ''){
-                                next('/xyt/hospital/register?uid='+from.query.uid+'&deptId='+from.query.deptId)
+                                next('/xyt/hospital/register?hosId='+from.query.hosId+'&deptId='+from.query.deptId)
                                 useUserStore().loginVisiabe=true
                                 return
                             }

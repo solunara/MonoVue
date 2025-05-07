@@ -1,7 +1,7 @@
 <template>
     <div class="xyt_top">
         <div class="content">
-            <div class="left">
+            <div class="left" @click="goTo('/xyt/xythome')">
                 <p>小医通 在线预约挂号平台</p>
             </div>
             <div class="right">
@@ -69,6 +69,7 @@ const goTo = (path:string, query?: Record<string, string>)=>{
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
             p {
                 font-size: 20px;
                 color: #55a6fe;

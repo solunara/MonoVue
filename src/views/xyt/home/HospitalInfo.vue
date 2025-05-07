@@ -34,7 +34,7 @@ const goHosDetail=()=>{
     $router.push({
         path: '/xyt/hospital/detail',
         query: {
-            uid: props.hospitalInfo.uid,
+            hosId: props.hospitalInfo.uid,
         }
     })
 }
