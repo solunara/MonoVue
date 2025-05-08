@@ -219,3 +219,36 @@ export interface RegisterDoctor {
 export interface ResponseRegisterDoctorData extends ResponseData {
     data:RegisterDoctor,
 }
+
+// 挂号中医生信息类型
+export interface OrderIdData {
+    orderId: string,
+}
+
+// 接口返回的确认挂号信息类型
+export interface ResponseConfirmRegister extends ResponseData {
+    data: OrderIdData,
+}
+
+// 挂号中医生信息类型
+export interface OrderData {
+    id:           number,
+	orderId:      string,
+	patientId:    string,
+	hosID:        string,
+	deptID:       string,
+	docId:        string,
+	hosName:      string,
+	deptName:     string,
+	docName:      string,
+    patientName:  string,
+	visitTime:    string,
+	amount:       number,
+	state:        number,
+	registerTime: string,
+}
+
+// 接口返回的挂号订单信息类型
+export interface ResponseOrderinfo extends ResponseData {
+    data: OrderData,
+}

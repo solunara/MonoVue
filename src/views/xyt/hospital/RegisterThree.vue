@@ -111,13 +111,14 @@
 import {User} from "@element-plus/icons-vue"
 import Visitor from '@/views/xyt/hospital/Visitor.vue'
 import { ref, onMounted } from "vue";
-import {getPatientData,getRegisterDoctor} from '@/api/xyt/hospital/index'
-import type {Patient,ResponsePatientsData,RegisterDoctor,ResponseRegisterDoctorData} from '@/api/xyt/type'
+import {getPatientData,getRegisterDoctor,addOrder} from '@/api/xyt/hospital/index'
+import type {Patient,ResponsePatientsData,RegisterDoctor,ResponseRegisterDoctorData,ResponseConfirmRegister} from '@/api/xyt/type'
 import { useUserStore } from '@/store/xyt/user'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from "element-plus";
 
 const $route = useRoute();
+const $router = useRouter();
 
 let userInfo = useUserStore();
 let patientList = ref<Patient[]>([])
@@ -126,7 +127,7 @@ let registerDoctor=ref<RegisterDoctor>()
 let currentIndex = ref<number>(-1);
 
 onMounted(()=>{
-    // 获取就诊人信息
+    // 获取就诊人列表信息
     getPatientList()
     // 获取医生信息
     getDoctorDetail()
@@ -158,29 +159,23 @@ const getDoctorDetail = async ()=>{
 
 //点击就诊人子组件的的回调
 const changeIndex = (index: number) => {
-  //存储当前用户选中就诊人信息索引值
-  currentIndex.value = index;
+    //存储当前用户选中就诊人信息索引值
+    currentIndex.value = index;
 };
 
 //确定挂号按钮的回调
 const submitOrder = async () => {
-  //医院编号
-  let hoscode = docInfo.value.hoscode;
-  //医生的ID
-  let scheduleId = docInfo.value.id;
-  //就诊人的ID
-  let patientId = userArr.value[currentIndex.value].id;
-  //提交订单
-  let result: SubmitOrder = await reqSubmitOrder(hoscode, scheduleId, patientId);
-  //提交订单成功
-  if (result.code == 200) {
-    $router.push({ path: "/user/order", query: { orderId: result.data } });
-  } else {
-    ElMessage({
-      type: "error",
-      message: result.message,
-    });
-  }
+    //就诊人的ID
+    let patientId = patientList.value[currentIndex.value].patientId;
+    let result:ResponseConfirmRegister = await addOrder(patientId, ($route.query.scheId) as string);
+    if(result.code==200){
+        $router.push({ path: "/xyt/xytuser/order", query: { orderId: result.data.orderId } });
+    }else{
+        ElMessage({
+            type: 'error',
+            message: (result.msg),
+        });
+    }
 };
 </script>
 
