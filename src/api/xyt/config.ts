@@ -23,4 +23,5 @@ export const API_CONFIG_XYT = {
     loginWithPhoneApi: `${BASE_URL_XYT}/user/login/phone`,
     getWechatLoginParamApi: `${BASE_URL_XYT}/user/login/wechat/param`,
     getUserInfoApi: `${BASE_URL_XYT}/user/info`,
+    certificationApi: `${BASE_URL_XYT}/user/certification`,
 }
