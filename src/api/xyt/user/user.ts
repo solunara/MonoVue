@@ -4,7 +4,8 @@ import type {
     ResponsePhoneCode,
     RequestLoginByPhone,
     ResponseLoginType,
-    WXLoginResponseData
+    WXLoginResponseData,
+    ResponseUserInfo,
 } from '@/api/xyt/type'
 
 // 获取手机验证码
@@ -27,3 +28,7 @@ export const getWechatLoginParam = (wxuri:string) => request.get<any, WXLoginRes
             wxuri: wxuri,
         }
     })
+    
+// 获取用户信息
+export const reqUserInfo = () => request.get<any, ResponseUserInfo>(
+    API_CONFIG_XYT.getUserInfoApi)

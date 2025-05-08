@@ -182,7 +182,7 @@ export interface ScheduleInfo extends ResponseData {
 export interface UserParams {
     certificatesNo:string,
     certificatesType:string,
-    certificatesUrl:string,
+    certificatesVal:string,
     name:string,
 }
 
@@ -218,4 +218,69 @@ export interface RegisterDoctor {
 // 接口返回的挂号中医生信息类型
 export interface ResponseRegisterDoctorData extends ResponseData {
     data:RegisterDoctor,
+}
+
+// 挂号中医生信息类型
+export interface OrderIdData {
+    orderId: string,
+}
+
+// 接口返回的确认挂号信息类型
+export interface ResponseConfirmRegister extends ResponseData {
+    data: OrderIdData,
+}
+
+// 挂号中医生信息类型
+export interface OrderData {
+    id:           number,
+	orderId:      string,
+	patientId:    string,
+	hosID:        string,
+	deptID:       string,
+	docId:        string,
+	hosName:      string,
+	deptName:     string,
+	docName:      string,
+    patientName:  string,
+	visitTime:    string,
+	amount:       number,
+	state:        number,
+	registerTime: string,
+}
+
+// 接口返回的挂号订单信息类型
+export interface ResponseOrderinfo extends ResponseData {
+    data: OrderData,
+}
+
+
+//获取二维码接口返回的数据ts类型
+export interface PayInfo {
+    codeUrl: string,
+    orderId: number,
+    totalFee: number,
+}
+
+export interface QrCode extends ResponseData {
+    data: PayInfo
+}
+
+//查询支付结果的ts数据类型
+export interface PayReslt extends ResponseData {
+    data: boolean
+}
+
+// 用户数据类型
+export interface UserInfo {
+    name:    string,
+	email: string,
+	phone: string,
+	profile: string,
+	idNumber: string,
+	birthday: string,
+}
+
+// 接口返回的用户数据类型
+export interface ResponseUserInfo extends ResponseData {
+    data: UserInfo
 }

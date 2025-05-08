@@ -6,6 +6,10 @@ import type {
     ScheduleInfo,
     ResponsePatientsData,
     ResponseRegisterDoctorData,
+    ResponseConfirmRegister,
+    ResponseOrderinfo,
+    QrCode,
+    PayReslt,
 } from '@/api/xyt/type'
 
 // 根据hosId获取医院信息
@@ -39,7 +43,7 @@ export const getPatientData = (userId:string) => request.get<any, ResponsePatien
         }
     })
 
-// getRegisterDoctor
+// 获取挂号时确认订单的医生信息
 export const getRegisterDoctor = (scheId:string) => request.get<any, ResponseRegisterDoctorData>(
     API_CONFIG_XYT.getRegisterDoctorApi,{
         params: {
@@ -48,10 +52,39 @@ export const getRegisterDoctor = (scheId:string) => request.get<any, ResponseReg
     })
 
     
-//
-export const addOrder = (scheId:string) => request.get<any, ResponseRegisterDoctorData>(
+// 确认挂号订单
+export const addOrder = (patientId:string, scheId:string) => request.post<any, ResponseConfirmRegister>(
     API_CONFIG_XYT.addOrderApi,{
+        patientId: patientId,
+        scheId: scheId,
+    })
+
+// 获取挂号订单详情
+export const getOrder = (orderId:string) => request.get<any, ResponseOrderinfo>(
+    API_CONFIG_XYT.getOrderApi,{
         params: {
-            scheId: scheId,
+            orderId:orderId,
+        }
+    })
+
+// 取消预约挂号
+export const cancelOrder = (orderId:string) => request.post<any, ResponseOrderinfo>(
+    API_CONFIG_XYT.cancelOrderApi,{
+        orderId: orderId,
+    })
+
+// 获取支付二维码
+export const reqQrcode = (orderId:string) => request.get<any, QrCode>(
+    API_CONFIG_XYT.getPayQrCodeApi,{
+        params: {
+            orderId: orderId,
+        }
+    })
+    
+// 获取订单支付结果
+export const reqQueryPayState = (orderId:string) => request.get<any, PayReslt>(
+    API_CONFIG_XYT.getPayResultApi,{
+        params: {
+            orderId: orderId,
         }
     })

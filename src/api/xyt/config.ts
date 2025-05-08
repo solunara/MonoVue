@@ -1,4 +1,4 @@
-const BASE_URL_XYT = "http://7480bf5a.r28.cpolar.top/xyt"
+const BASE_URL_XYT = "http://4068dbed.r28.cpolar.top/xyt"
 
 export const API_CONFIG_XYT = {
     // hospital
@@ -10,10 +10,17 @@ export const API_CONFIG_XYT = {
     getHospitalSchedulerApi: `${BASE_URL_XYT}/hos/scheduler`,
     getPatientsApi: `${BASE_URL_XYT}/hos/patient/list`,
     getRegisterDoctorApi: `${BASE_URL_XYT}/hos/register/doctor`,
+
+    // order
     addOrderApi: `${BASE_URL_XYT}/hos/add/order`,
-    
+    getOrderApi: `${BASE_URL_XYT}/hos/order`,
+    cancelOrderApi: `${BASE_URL_XYT}/hos/cancel/order`,
+    getPayQrCodeApi: `${BASE_URL_XYT}/hos/pay/wechat/qrcode`,
+    getPayResultApi: `${BASE_URL_XYT}/hos/pay/result`,
+
     // user
     getPhoneCodeApi: `${BASE_URL_XYT}/user/phone/code`,
     loginWithPhoneApi: `${BASE_URL_XYT}/user/login/phone`,
     getWechatLoginParamApi: `${BASE_URL_XYT}/user/login/wechat/param`,
+    getUserInfoApi: `${BASE_URL_XYT}/user/info`,
 }
