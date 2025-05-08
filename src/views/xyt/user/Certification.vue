@@ -42,19 +42,19 @@
             ref="form"
             style="margin: 20px auto; width: 60%" 
             label-width="70"
-            v-model="params"
+            :model="params"
         >
             <el-form-item label="用户姓名">
                 <el-input v-model="params.name" placeholder="请输入真实姓名"></el-input>
             </el-form-item>
             <el-form-item label="证件类型">
-                <el-select v-model="params.certificatesType" placeholder="请选择证件类型" style="width: 100%">
+                <el-select v-model="params.codeType" placeholder="请选择证件类型" style="width: 100%">
                     <el-option label="身份证" value="身份证"></el-option>
                     <el-option label="户口本" value="户口本"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="证件号码">
-                <el-input  v-model="params.certificatesNo" placeholder="请输入证件号码"></el-input>
+                <el-input  v-model="params.code" placeholder="请输入证件号码"></el-input>
             </el-form-item>
             <el-form-item label="上传证件">
                 <el-upload
@@ -63,7 +63,7 @@
                     :file-list="fileList"
                     :auto-upload="false"
                     :on-remove="handleRemove"
-                    :before-upload="handleBeforeUpload"
+                    :on-change="handleChange"
                     :on-exceed="exceedCallback"
                     :on-preview="handlePreview"
                     accept="image/*"
@@ -94,8 +94,8 @@ import { ElMessage } from 'element-plus'
 import type { UploadFile } from 'element-plus'
 import {ref,reactive, onMounted} from 'vue'
 import { InfoFilled } from "@element-plus/icons-vue";
-import type {UserParams,UserInfo,ResponseUserInfo} from '@/api/xyt/type'
-import { reqUserInfo } from '@/api/xyt/user/user'
+import type {UserParams,UserInfo,ResponseUserInfo,CertificationReslt} from '@/api/xyt/type'
+import { reqUserInfo,reqUserCertation } from '@/api/xyt/user/user'
 
 let form = ref();
 let upload = ref();
@@ -103,10 +103,10 @@ const fileList = ref<UploadFile[]>([])
 
 // 收集用户表单认证的数据
 let params = reactive<UserParams>({
-    certificatesNo: "",
-    certificatesType: "",
-    certificatesVal: "",
     name: "",
+    code: "",
+    codeType: "",
+    image: "",
 });
 
 let userInfo = ref<UserInfo>()
@@ -137,20 +137,20 @@ const exceedCallback = ()=>{
 }
 
 // 上传前处理：转成 base64
-const handleBeforeUpload = (file: File): boolean => {
-    const reader = new FileReader()
-    reader.onload = () => {
-        const result = reader.result as string
-        params.certificatesVal = result
-        previewImage.value = result
-        dialogVisible.value = true
-    }
-    reader.onerror = () => {
-        ElMessage.error('文件读取失败')
-    }
-    reader.readAsDataURL(file)
-    return false
-}
+const handleChange: UploadProps['onChange'] = (file: UploadFile, files: UploadFiles) => {
+  const reader = new FileReader();
+
+  reader.onload = (event) => {
+    previewImage.value = event.target?.result as string;
+    params.image = previewImage.value;
+  };
+
+  reader.onerror = (error) => {
+    console.error('Error reading file:', error);
+  };
+
+  reader.readAsDataURL(file.raw!);
+};
 
 // 预览文件时的回调
 const handlePreview = (file: UploadFile) => {
@@ -179,25 +179,25 @@ const reset = () => {
 
 //提交按钮的回调
 const submit = async () => {
-  //全部的表单校验通过返回一个成功的promise
-  //如果有一个表单校验失败返回的是一个失败的promise对象,后面的语句就不在执行了
-  await form.value.validate();
-  try {
+    //全部的表单校验通过返回一个成功的promise
+    //如果有一个表单校验失败返回的是一个失败的promise对象,后面的语句就不在执行了
+    //await form.value.validate();
+
     //认证成功
-    //await reqUserCertation(params);
-    //提示消息
-    ElMessage({
-      type: "success",
-      message: "认证成功",
-    });
-    //认证成功以后再次获取用户信息
-    //getUserInfo();
-  } catch (error) {
-    ElMessage({
-      type: "error",
-      message: "认证失败",
-    });
-  }
+    let result:CertificationReslt =  await reqUserCertation(params);
+    if (result.code == 200){
+        //提示消息
+        ElMessage({
+            type: "success",
+            message: "认证成功",
+        });
+        getUserInfo();
+    }else{
+        ElMessage({
+            type: "error",
+            message: "认证失败",
+        });
+    }
 };
 </script>
 

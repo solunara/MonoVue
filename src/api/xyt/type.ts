@@ -180,10 +180,10 @@ export interface ScheduleInfo extends ResponseData {
 
 // 实名认证用户类型
 export interface UserParams {
-    certificatesNo:string,
-    certificatesType:string,
-    certificatesVal:string,
     name:string,
+    code:string,
+    codeType:string,
+    image:string,
 }
 
 // 就诊人信息类型
@@ -283,4 +283,9 @@ export interface UserInfo {
 // 接口返回的用户数据类型
 export interface ResponseUserInfo extends ResponseData {
     data: UserInfo
+}
+
+//实名认证结果的ts数据类型
+export interface CertificationReslt extends ResponseData {
+    data: any
 }
