@@ -252,3 +252,20 @@ export interface OrderData {
 export interface ResponseOrderinfo extends ResponseData {
     data: OrderData,
 }
+
+
+//获取二维码接口返回的数据ts类型
+export interface PayInfo {
+    codeUrl: string,
+    orderId: number,
+    totalFee: number,
+}
+
+export interface QrCode extends ResponseData {
+    data: PayInfo
+}
+
+//查询支付结果的ts数据类型
+export interface PayReslt extends ResponseData {
+    data: boolean
+}

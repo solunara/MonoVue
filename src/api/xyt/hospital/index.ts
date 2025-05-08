@@ -8,6 +8,8 @@ import type {
     ResponseRegisterDoctorData,
     ResponseConfirmRegister,
     ResponseOrderinfo,
+    QrCode,
+    PayReslt,
 } from '@/api/xyt/type'
 
 // 根据hosId获取医院信息
@@ -69,4 +71,20 @@ export const getOrder = (orderId:string) => request.get<any, ResponseOrderinfo>(
 export const cancelOrder = (orderId:string) => request.post<any, ResponseOrderinfo>(
     API_CONFIG_XYT.cancelOrderApi,{
         orderId: orderId,
+    })
+
+// 获取支付二维码
+export const reqQrcode = (orderId:string) => request.get<any, QrCode>(
+    API_CONFIG_XYT.getPayQrCodeApi,{
+        params: {
+            orderId: orderId,
+        }
+    })
+    
+// 获取订单支付结果
+export const reqQueryPayState = (orderId:string) => request.get<any, PayReslt>(
+    API_CONFIG_XYT.getPayResultApi,{
+        params: {
+            orderId: orderId,
+        }
     })

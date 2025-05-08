@@ -89,7 +89,7 @@
                     type="primary"
                     size="default"
                     v-if="orderInfo?.state == 0"
-                    @click=""
+                    @click="openDialog"
                 >支付</el-button>
             </div>
             </div>
@@ -117,16 +117,17 @@
         </el-card>
         <!-- 展示支付二维码的结构 -->
         <!-- 对话框通过v-model控制显示与隐藏的 true:展示 false隐藏 -->
-        <el-dialog @close="" v-model="dialogVisible" title="微信支付" width="400">
+        <el-dialog @close="close" v-model="dialogVisible" title="微信支付" width="30%">
         <!-- 支付需要使用的二维码图片 -->
         <div class="qrocde">
+            <!-- 实际替换成 imgUrl.value -->
             <img src="@/assets/imgs/xyt/wechat_payment_code.png" alt="" />
             <p>请使用微信扫一扫</p>
             <p>扫描二维码支付</p>
         </div>
         <!-- 对话框底部插槽传递结构 -->
         <template #footer>
-            <el-button type="primary" size="default" @click="">关闭窗口</el-button>
+            <el-button type="primary" size="default" @click="closeDialog">关闭窗口</el-button>
         </template>
         </el-dialog>
     </div>
@@ -135,15 +136,22 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
-import type { OrderData, ResponseOrderinfo } from '@/api/xyt/type'
+import type { OrderData, ResponseOrderinfo, QrCode, PayReslt } from '@/api/xyt/type'
 import { getOrder } from '@/api/xyt/hospital/index'
 import { useRoute } from 'vue-router'
 import { cancelOrder } from '@/api/xyt/hospital/index'
+import { reqQrcode, reqQueryPayState } from '@/api/xyt/hospital/index'
+//@ts-ignore
+import QRCode from "qrcode";
 
 const $route = useRoute();
 let orderInfo = ref<OrderData>();
 //控制对话框显示与隐藏的数据
 let dialogVisible = ref<boolean>(false);
+//定义存储二维码图片路径
+let imgUrl = ref<string>("");
+//查询支付结果定时器
+let timer = ref<any>();
 
 //组件挂载完毕
 onMounted(() => {
@@ -175,18 +183,60 @@ const getOrderState=(state:number)=>{
 
 //取消订单   订单状态有三种 orderStatus  -1  取消预约  0 已预约但没有支付  1 支付成功 2 已完成
 const cancel = async () => {
-  try {
-    //取消预约成功
-    await cancelOrder($route.query.orderId as string);
-    //再次获取订单详情的数据
-    getOrderInfo();
-  } catch (error) {
-    ElMessage({
-      type: "error",
-      message: "取消预约失败",
-    });
-  }
+    try {
+        // 取消预约
+        await cancelOrder($route.query.orderId as string);
+        //再次获取订单详情的数据
+        getOrderInfo();
+    } catch (error) {
+        ElMessage({
+            type: "error",
+            message: "取消预约失败",
+        });
+    }
 };
+
+//点击支付按钮的回调
+const openDialog = async () => {
+    //展示对话框
+    dialogVisible.value = true;
+
+    //获取支付需要使用二维码信息
+    let result: QrCode = await reqQrcode($route.query.orderId as string);
+    //更具服务器返回二维码信息生成二维码图片
+    imgUrl.value = await QRCode.toDataURL(result.data.codeUrl);
+    
+    //询问服务器当前这笔交易的支付结果
+    //每隔2秒询问服务器是否支付成功
+    timer.value = setInterval(async () => {
+        let result: PayReslt = await reqQueryPayState($route.query.orderId as string);
+        //如果服务器返回的数据data:true,代表支付成功
+        if (result.data) {
+            //关闭对话框
+            dialogVisible.value = false;
+            //提示信息
+            ElMessage({
+                type: "success",
+                message: "支付成功",
+            });
+            //清除定时器
+            clearInterval(timer.value);
+            //再次获取订单详情的数据
+            getOrderInfo();
+        }
+    }, 2000);
+};
+
+// 关闭支付对话框
+const closeDialog = async () => {
+    dialogVisible.value = false;
+    clearInterval(timer.value);
+}
+
+//对话框右上角关闭的叉子的回调
+const close = ()=>{
+    clearInterval(timer.value);
+}
 </script>
 
 <style scoped lang="scss">
@@ -243,6 +293,24 @@ const cancel = async () => {
         line-height: 30px;
       }
     }
+  }
+}
+
+::v-deep(.el-dialog__body) {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.qrocde {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  img {
+    width: 80%;
+    height: 80%;
+  }
+  p {
+    line-height: 30px;
   }
 }
 </style>
