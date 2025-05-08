@@ -182,7 +182,7 @@ export interface ScheduleInfo extends ResponseData {
 export interface UserParams {
     certificatesNo:string,
     certificatesType:string,
-    certificatesUrl:string,
+    certificatesVal:string,
     name:string,
 }
 
@@ -268,4 +268,19 @@ export interface QrCode extends ResponseData {
 //查询支付结果的ts数据类型
 export interface PayReslt extends ResponseData {
     data: boolean
+}
+
+// 用户数据类型
+export interface UserInfo {
+    name:    string,
+	email: string,
+	phone: string,
+	profile: string,
+	idNumber: string,
+	birthday: string,
+}
+
+// 接口返回的用户数据类型
+export interface ResponseUserInfo extends ResponseData {
+    data: UserInfo
 }

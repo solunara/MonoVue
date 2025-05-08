@@ -1,4 +1,4 @@
-const BASE_URL_XYT = "http://7480bf5a.r28.cpolar.top/xyt"
+const BASE_URL_XYT = "http://4068dbed.r28.cpolar.top/xyt"
 
 export const API_CONFIG_XYT = {
     // hospital
@@ -22,4 +22,5 @@ export const API_CONFIG_XYT = {
     getPhoneCodeApi: `${BASE_URL_XYT}/user/phone/code`,
     loginWithPhoneApi: `${BASE_URL_XYT}/user/login/phone`,
     getWechatLoginParamApi: `${BASE_URL_XYT}/user/login/wechat/param`,
+    getUserInfoApi: `${BASE_URL_XYT}/user/info`,
 }
