@@ -8,7 +8,6 @@ export const API_CONFIG_XYT = {
     getHospitalDetailApi: `${BASE_URL_XYT}/hos/detail`,
     getHospitalDepartmentApi: `${BASE_URL_XYT}/hos/department`,
     getHospitalSchedulerApi: `${BASE_URL_XYT}/hos/scheduler`,
-    getPatientsApi: `${BASE_URL_XYT}/hos/patient/list`,
     getRegisterDoctorApi: `${BASE_URL_XYT}/hos/register/doctor`,
 
     // order
@@ -24,4 +23,7 @@ export const API_CONFIG_XYT = {
     getWechatLoginParamApi: `${BASE_URL_XYT}/user/login/wechat/param`,
     getUserInfoApi: `${BASE_URL_XYT}/user/info`,
     certificationApi: `${BASE_URL_XYT}/user/certification`,
+
+    getPatientsApi: `${BASE_URL_XYT}/user/patient/list`,
+    getOrderStatesApi: `${BASE_URL_XYT}/user/order/states`,
 }

@@ -233,6 +233,7 @@ export interface ResponseConfirmRegister extends ResponseData {
 // 挂号中医生信息类型
 export interface OrderData {
     id:           number,
+    userId:       string,
 	orderId:      string,
 	patientId:    string,
 	hosID:        string,
@@ -253,6 +254,13 @@ export interface ResponseOrderinfo extends ResponseData {
     data: OrderData,
 }
 
+// 接口返回的挂号订单列表类型
+export interface ResponseOrderListType extends ResponseData {
+    data: {
+        list: OrderData[],
+        total: number,
+    },
+}
 
 //获取二维码接口返回的数据ts类型
 export interface PayInfo {
@@ -288,4 +296,14 @@ export interface ResponseUserInfo extends ResponseData {
 //实名认证结果的ts数据类型
 export interface CertificationReslt extends ResponseData {
     data: any
+}
+
+// 挂号订单状态
+export interface OrderStatus  {
+	id:    number,
+	state: string,
+}
+// 接口返回的挂号订单状态列表
+export interface ResponseOrderStatus extends ResponseData {
+	data: OrderStatus[],
 }

@@ -5,8 +5,12 @@
                 <h3>实名信息</h3>
             </div>
         </template>
-        <div class="tip" style="color: #7f7f7f">
-            <el-icon><InfoFilled /></el-icon>
+        <div v-if="userInfo?.idNumber" class="tip" style="color: #7f7f7f">
+            <el-icon><UserFilled /></el-icon>
+            <p>您已完成实名认证, 可添加就诊人进行预约挂号服务。</p>
+        </div>
+        <div v-else class="tip" style="color: #7f7f7f">
+            <el-icon><WarnTriangleFilled /></el-icon>
             <p>完成实名认证后才能添加就诊人，进行挂号服务。</p>
         </div>
         <!-- 实名后展示 -->
@@ -94,7 +98,7 @@
 import { ElMessage } from 'element-plus'
 import type { UploadFile } from 'element-plus'
 import {ref,reactive, onMounted} from 'vue'
-import { InfoFilled } from "@element-plus/icons-vue";
+import { UserFilled, WarnTriangleFilled } from "@element-plus/icons-vue";
 import type {UserParams,UserInfo,ResponseUserInfo,CertificationReslt} from '@/api/xyt/type'
 import { reqUserInfo,reqUserCertation } from '@/api/xyt/user/user'
 
