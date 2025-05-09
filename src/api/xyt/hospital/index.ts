@@ -10,6 +10,9 @@ import type {
     ResponseOrderinfo,
     QrCode,
     PayReslt,
+    ResponseOrderListType,
+    ResponseOrderStatus,
+    AddOrUpdateUser,
 } from '@/api/xyt/type'
 
 // 根据hosId获取医院信息
@@ -36,12 +39,8 @@ export const getHospitalScheduler = (hosId:string, deptId:string, pageNo:number 
     })
     
 // 获取用户的就诊人列表
-export const getPatientData = (userId:string) => request.get<any, ResponsePatientsData>(
-    API_CONFIG_XYT.getPatientsApi,{
-        params: {
-            userId: userId,
-        }
-    })
+export const getPatientData = () => request.get<any, ResponsePatientsData>(
+    API_CONFIG_XYT.getPatientsApi)
 
 // 获取挂号时确认订单的医生信息
 export const getRegisterDoctor = (scheId:string) => request.get<any, ResponseRegisterDoctorData>(
@@ -67,6 +66,10 @@ export const getOrder = (orderId:string) => request.get<any, ResponseOrderinfo>(
         }
     })
 
+// 获取挂号订单状态
+export const getOrderStates = () => request.get<any, ResponseOrderStatus>(
+    API_CONFIG_XYT.getOrderStatesApi)
+
 // 取消预约挂号
 export const cancelOrder = (orderId:string) => request.post<any, ResponseOrderinfo>(
     API_CONFIG_XYT.cancelOrderApi,{
@@ -88,3 +91,23 @@ export const reqQueryPayState = (orderId:string) => request.get<any, PayReslt>(
             orderId: orderId,
         }
     })
+
+// 获取挂号订单列表
+export const reqOrderList = (patientId:string, state:number, pageNo:number = 1, pageSize:number = 1) => request.get<any, ResponseOrderListType>(
+    API_CONFIG_XYT.getPayResultApi,{
+        params: {
+            patientId: patientId,
+            state: state,
+            pageNo: pageNo,
+            pageSize: pageSize,
+        }
+    })
+
+//新增与修改已有的就诊人接口方法
+export const reqAddOrUpdateUser = (data: AddOrUpdateUser) => {
+    if (data.id) {
+        return request.put<any, any>(API_CONFIG_XYT.updatePatientApi, data);
+    } else {
+        return request.post<any, any>(API_CONFIG_XYT.addPatientApi, data);
+    }
+}

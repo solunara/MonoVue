@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="true">
+        <div v-if="$route.query.orderId">
             <OrderDetail />
         </div>
         <div v-else>
