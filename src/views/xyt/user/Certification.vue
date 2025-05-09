@@ -96,7 +96,7 @@
 
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
-import type { UploadFile } from 'element-plus'
+import type { UploadFile, UploadFiles, UploadProps } from 'element-plus'
 import {ref,reactive, onMounted} from 'vue'
 import { UserFilled, WarnTriangleFilled } from "@element-plus/icons-vue";
 import type {UserParams,UserInfo,ResponseUserInfo,CertificationReslt} from '@/api/xyt/type'
@@ -143,18 +143,15 @@ const exceedCallback = ()=>{
 
 // 上传前处理：转成 base64
 const handleChange: UploadProps['onChange'] = (file: UploadFile, files: UploadFiles) => {
-  const reader = new FileReader();
-
-  reader.onload = (event) => {
-    previewImage.value = event.target?.result as string;
-    params.image = previewImage.value;
-  };
-
-  reader.onerror = (error) => {
-    console.error('Error reading file:', error);
-  };
-
-  reader.readAsDataURL(file.raw!);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        previewImage.value = event.target?.result as string;
+        params.image = previewImage.value;
+    };
+    reader.onerror = (error) => {
+        console.error('Error reading file:', error);
+    };
+    reader.readAsDataURL(file.raw!);
 };
 
 // 预览文件时的回调
@@ -222,7 +219,7 @@ const validatorType = (rule: any, value: any, callBack: any) => {
 };
 
 //证件号码的校验方法
-const validatorNo = (rule: any, value: any, callBack) => {
+const validatorNo = (rule: any, value: any, callBack: any) => {
     let sfz = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{4}$/;
     let hkb = /^\d{9}$/;
     if (sfz.test(value) || hkb.test(value)) {
@@ -230,14 +227,6 @@ const validatorNo = (rule: any, value: any, callBack) => {
     } else {
         callBack(new Error("请输入正确的身份证或者户口本的号码"));
     }
-    };
-//证件照图片的
-const validatorUrl = (rule: any, value: any, callBack: any) => {
-  if (value.length) {
-    callBack();
-  } else {
-    callBack(new Error("请上传证件照图片"));
-  }
 };
 
 const rules = {

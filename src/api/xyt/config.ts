@@ -26,4 +26,7 @@ export const API_CONFIG_XYT = {
 
     getPatientsApi: `${BASE_URL_XYT}/user/patient/list`,
     getOrderStatesApi: `${BASE_URL_XYT}/user/order/states`,
+
+    addPatientApi: `${BASE_URL_XYT}/user/patient`,
+    updatePatientApi: `${BASE_URL_XYT}/user/patient`,
 }
