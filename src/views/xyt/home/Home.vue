@@ -60,7 +60,7 @@ import { onMounted, ref } from 'vue'
 import {getHospitalList} from '@/api/xyt/home/index'
 import type {HospitalType,HospitalListType} from '@/api/xyt/type'
 
-let cityName = ref<string>('北京')
+let cityName = ref<string>('北京市')
 let pageNo = ref<number>(1)
 let pageSize = ref<number>(10)
 let totalPage = ref<number>(0)

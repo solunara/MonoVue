@@ -1,6 +1,7 @@
 import { API_CONFIG_XYT } from "@/api/xyt/config";
 import request  from "@/api/request.js";
 import type {
+    ResponseData,
     RespHospitalDetailType,
     ResponseHospitalDepartment,
     ScheduleInfo,
@@ -12,7 +13,7 @@ import type {
     PayReslt,
     ResponseOrderListType,
     ResponseOrderStatus,
-    AddOrUpdateUser,
+    Patient,
 } from '@/api/xyt/type'
 
 // 根据hosId获取医院信息
@@ -41,6 +42,12 @@ export const getHospitalScheduler = (hosId:string, deptId:string, pageNo:number 
 // 获取用户的就诊人列表
 export const getPatientData = () => request.get<any, ResponsePatientsData>(
     API_CONFIG_XYT.getPatientsApi)
+
+// 删除就诊人
+export const deletePatient = (patientId:string) => request.post<any, ResponseData>(
+    API_CONFIG_XYT.deletePatientApi,{
+        patientId: patientId,
+    })
 
 // 获取挂号时确认订单的医生信息
 export const getRegisterDoctor = (scheId:string) => request.get<any, ResponseRegisterDoctorData>(
@@ -104,9 +111,9 @@ export const reqOrderList = (patientId:string, state:number, pageNo:number = 1, 
     })
 
 //新增与修改已有的就诊人接口方法
-export const reqAddOrUpdateUser = (data: AddOrUpdateUser) => {
+export const reqAddOrUpdateUser = (data: Patient) => {
     if (data.id) {
-        return request.put<any, any>(API_CONFIG_XYT.updatePatientApi, data);
+        return request.post<any, any>(API_CONFIG_XYT.updatePatientApi, data);
     } else {
         return request.post<any, any>(API_CONFIG_XYT.addPatientApi, data);
     }

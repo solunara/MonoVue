@@ -51,12 +51,15 @@ export interface HospitalGradeType {
 // 医院地区类型
 export interface HospitalRegionType {
     id: number,
-    district_name: string,
-    district_code: string,
+    name: string,
+    code: string,
+    city_name: string,
     city_code: string,
+    province_name: string,
     province_code: string,
-    CreatedAt: number,
-    UpdatedAt: number,
+    category: number,
+    created_at: number,
+    updated_at: number,
 }
 
 // 医院科室类型
@@ -187,21 +190,23 @@ export interface UserParams {
 }
 
 // 就诊人信息类型
-export interface Patient {
-    id:number,
-	userId:string,
-	patientId:string,
-    idNumber:string,
-	name:string,
-	birthday:string,
-	phone:string,
-	sex:boolean,
-}
+// export interface Patient {
+//     id:number,
+// 	userId:string,
+// 	patientId:string,
+//     idNumber:string,
+// 	name:string,
+// 	birthday:string,
+// 	phone:string,
+// 	sex:boolean,
+// }
 
 // 接口返回的就诊人信息列表
 export interface ResponsePatientsData extends ResponseData {
     data:Patient[],
 }
+
+
 
 // 挂号中医生信息类型
 export interface RegisterDoctor {
@@ -316,10 +321,10 @@ export interface CertationType {
 }
 
 //新增与修改已有的就诊人参数的数据ts类型
-export interface AddOrUpdateUser {
+export interface Patient {
     id?: string,
     name: string,
-    certificatesType: string,
+    certificatesType: number,
     certificatesNo:string,
     sex:number,
     birthdate:string,
@@ -329,7 +334,18 @@ export interface AddOrUpdateUser {
     addressSelected:string[],
     address:string,
     contactsName:string,
-    contactsCertificatesType:string,
+    contactsCertificatesType:number,
     contactsCertificatesNo:string,
     contactsPhone:string
+}
+
+// 级联城市信息
+export interface CascaderCity {
+    code: string,
+    name: string,
+    leaf: boolean,
+}
+// 接口返回的级联城市信息
+export interface ResponseCascaderCity extends ResponseData {
+	data: CascaderCity[],
 }
