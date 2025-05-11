@@ -4,7 +4,7 @@
             <div class="left">地区:</div>
             <ul class="hospital_region">
                 <li :class="{active:activedRegionFlag==0 }"  @click="changeRegion(0, '')">全部</li>
-                <li v-for="item in hospitalRegionList" :key="item.id" :class="{active:activedRegionFlag==item.id }"  @click="changeRegion(item.id, item.district_code)">{{ item.district_name }}</li>
+                <li v-for="item in hospitalRegionList" :key="item.id" :class="{active:activedRegionFlag==item.id }"  @click="changeRegion(item.id, item.code)">{{ item.name }}</li>
             </ul>
         </div>
     </div>

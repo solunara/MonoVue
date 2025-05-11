@@ -108,6 +108,8 @@ const getOrderInfo = async (pager: number = 1) => {
     if (result.code == 200) {
         allOrderArr.value = result.data.list;
         total.value = result.data.total;
+        console.log(result.data.list);
+        
     }
 };
 

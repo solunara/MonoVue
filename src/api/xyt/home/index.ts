@@ -12,7 +12,7 @@ export const getHospitalGrade = () => request.get<any, ResponseHospitalGrade>(AP
 
 
 // 获取医院地区
-export const getHospitalRegion = (cityName:string = '北京') =>  request.get<any, ResponseHospitalRegion>(API_CONFIG_XYT.getHospitalRegionApi, {
+export const getHospitalRegion = (cityName:string = '北京市') =>  request.get<any, ResponseHospitalRegion>(API_CONFIG_XYT.getHospitalRegionApi, {
         params: {
             cityName: cityName,
         }

@@ -48,8 +48,8 @@
                 </el-form-item>
                 <el-form-item label="用户性别">
                     <el-radio-group v-model="userParams.sex">
-                        <el-radio :label="1">男</el-radio>
-                        <el-radio :label="0">女</el-radio>
+                        <el-radio :value="1">男</el-radio>
+                        <el-radio :value="0">女</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="出生日期">
@@ -71,14 +71,14 @@
             <el-form style="width: 60%; margin: 10px auto">
                 <el-form-item label="婚姻状况">
                     <el-radio-group v-model="userParams.isMarry">
-                        <el-radio :label="1">已婚</el-radio>
-                        <el-radio :label="0">未婚</el-radio>
+                        <el-radio :value="1">已婚</el-radio>
+                        <el-radio :value="0">未婚</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="自费/医保">
                     <el-radio-group v-model="userParams.isInsure">
-                        <el-radio :label="1">自费</el-radio>
-                        <el-radio :label="0">医保</el-radio>
+                        <el-radio :value="1">自费</el-radio>
+                        <el-radio :value="0">医保</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="当前的住址">
@@ -140,9 +140,11 @@ import type { CascaderProps } from "element-plus";
 //@ts-ignore
 import { ElMessage } from "element-plus";
 import { User } from "@element-plus/icons-vue";
+import Visitor from "@/views/xyt/hospital/Visitor.vue";
 import { getPatientData,reqAddOrUpdateUser } from "@/api/xyt/hospital/index";
+import { reqCascaderCity } from "@/api/xyt/city/city";
 import { onMounted, ref, reactive, watch } from "vue";
-import type { ResponsePatientsData, Patient, CertationType, AddOrUpdateUser } from "@/api/xyt/type";
+import type { ResponsePatientsData, Patient, CertationType, ResponseCascaderCity } from "@/api/xyt/type";
 
 //引入路由器与路由方法
 import { useRouter, useRoute } from "vue-router";
@@ -157,9 +159,10 @@ let scene = ref<number>(0);
 //存储证件类型的数据
 let certationArr = ref<CertationType[]>([]);
 //收集新增就诊人的数据
-let userParams = reactive<AddOrUpdateUser>({
+let userParams = reactive<Patient>({
+    id: "",
     name: "",
-    certificatesType: "",
+    certificatesType: 0,
     certificatesNo: "",
     sex: 0,
     birthdate: "",
@@ -169,7 +172,7 @@ let userParams = reactive<AddOrUpdateUser>({
     addressSelected: [],
     address: "",
     contactsName: "",
-    contactsCertificatesType: "",
+    contactsCertificatesType: 0,
     contactsCertificatesNo: "",
     contactsPhone: "",
 });
@@ -184,7 +187,6 @@ onMounted(() => {
     if ($route.query.type == "add") {
         scene.value = 1;
     }
-
     if ($route.query.type == "edit") {
         scene.value = 1;
     }
@@ -207,17 +209,19 @@ const addUser = () => {
 };
 
 //就诊人子组件自定义事件的回调
-const changeScene = (user: AddOrUpdateUser) => {
+const changeScene = (user: Patient) => {
     scene.value = 1;
+    console.log('user: ',user);
+    
     //收集已有的就诊人信息
     Object.assign(userParams, user);
 };
 
 const reset = () => {
     Object.assign(userParams, {
-        id:null,
+        id:"",
         name: "",
-        certificatesType: "",
+        certificatesType: 0,
         certificatesNo: "",
         sex: 0,
         birthdate: "",
@@ -227,7 +231,7 @@ const reset = () => {
         addressSelected: [],
         address: "",
         contactsName: "",
-        contactsCertificatesType: "",
+        contactsCertificatesType: 0,
         contactsCertificatesNo: "",
         contactsPhone: "",
     });
@@ -245,20 +249,20 @@ const getCertationType = async () => {
 const props: CascaderProps = {
     lazy: true, //懒加载数据
     //加载级联选择器数据方法
-    // async lazyLoad(node: any, resolve: any) {
-    //     let result: any = await reqCity(node.data.id || "86");
-    //     //整理数据
-    //     let showData = result.data.map((item: any) => {
-    //     return {
-    //         id: item.id,
-    //         label: item.name,
-    //         value: item.value,
-    //         leaf: !item.hasChildren,
-    //     };
-    //     });
-    //     //注入组件需要展示的数据
-    //     resolve(showData);
-    // },
+    async lazyLoad(node: any, resolve: any) {
+        let result: ResponseCascaderCity = await reqCascaderCity(node.data.id || "86");
+        //整理数据
+        let showData = result.data.map((item: any) => {
+            return {
+                id: item.code,
+                label: item.name,
+                value: item.code,
+                leaf: !item.leaf,
+            };
+        });
+        //注入组件需要展示的数据
+        resolve(showData);
+    },
 };
 
 //提交按钮的方法的回调
@@ -270,7 +274,7 @@ const submit = async () => {
         //提示文字
         ElMessage({
             type: "success",
-            message: userParams.id ? "更新成功" : "新增成功",
+            message: userParams.id!="" ? "更新成功" : "新增成功",
         });
         //提交按钮的时候判断是不是从预约挂号而来
         if ($route.query.type) {
@@ -283,7 +287,7 @@ const submit = async () => {
     } catch (error) {
         ElMessage({
             type: "success",
-            message: userParams.id ? "更新失败" : "新增失败",
+            message: userParams.id!="" ? "更新失败" : "新增失败",
         });
     }
 };
@@ -303,6 +307,7 @@ watch(
 
 //子组件自定义事件:删除按钮触发
 const removeUser = ()=>{
+    console.log('5');
     //再次获取全部的就诊人的信息
     getAllUser();
 }

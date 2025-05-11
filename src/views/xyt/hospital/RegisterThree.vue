@@ -13,7 +13,7 @@
                 <div class="user">
                     <Visitor 
                         v-for="(item, index) in patientList" 
-                        :key="item.patientId" 
+                        :key="item.id" 
                         :user="item" 
                         :index="index" 
                         :currentIndex="currentIndex"
@@ -113,14 +113,12 @@ import Visitor from '@/views/xyt/hospital/Visitor.vue'
 import { ref, onMounted } from "vue";
 import {getPatientData,getRegisterDoctor,addOrder} from '@/api/xyt/hospital/index'
 import type {Patient,ResponsePatientsData,RegisterDoctor,ResponseRegisterDoctorData,ResponseConfirmRegister} from '@/api/xyt/type'
-import { useUserStore } from '@/store/xyt/user'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from "element-plus";
 
 const $route = useRoute();
 const $router = useRouter();
 
-let userInfo = useUserStore();
 let patientList = ref<Patient[]>([])
 let registerDoctor=ref<RegisterDoctor>()
 //存储用户确定就诊人索引值
@@ -134,7 +132,7 @@ onMounted(()=>{
 })
 
 const getPatientList = async ()=>{
-    let result:ResponsePatientsData = await getPatientData(userInfo.userInfo.userId);
+    let result:ResponsePatientsData = await getPatientData();
     if(result.code==200){
         patientList.value=result.data
     }else{
@@ -166,8 +164,8 @@ const changeIndex = (index: number) => {
 //确定挂号按钮的回调
 const submitOrder = async () => {
     //就诊人的ID
-    let patientId = patientList.value[currentIndex.value].patientId;
-    let result:ResponseConfirmRegister = await addOrder(patientId, ($route.query.scheId) as string);
+    let patientId:string = (patientList.value[currentIndex.value].id) as string;
+    let result:ResponseConfirmRegister = await addOrder(patientId , ($route.query.scheId) as string);
     if(result.code==200){
         $router.push({ path: "/xyt/xytuser/order", query: { orderId: result.data.orderId } });
     }else{
