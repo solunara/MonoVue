@@ -16,6 +16,7 @@ export const API_CONFIG_XYT = {
     cancelOrderApi: `${BASE_URL_XYT}/hos/cancel/order`,
     getPayQrCodeApi: `${BASE_URL_XYT}/hos/pay/wechat/qrcode`,
     getPayResultApi: `${BASE_URL_XYT}/hos/pay/result`,
+    getOrderListApi: `${BASE_URL_XYT}/hos/order/list`,
 
     // user
     getPhoneCodeApi: `${BASE_URL_XYT}/user/phone/code`,

@@ -101,7 +101,7 @@ export const reqQueryPayState = (orderId:string) => request.get<any, PayReslt>(
 
 // 获取挂号订单列表
 export const reqOrderList = (patientId:string, state:number, pageNo:number = 1, pageSize:number = 1) => request.get<any, ResponseOrderListType>(
-    API_CONFIG_XYT.getPayResultApi,{
+    API_CONFIG_XYT.getOrderListApi,{
         params: {
             patientId: patientId,
             state: state,
