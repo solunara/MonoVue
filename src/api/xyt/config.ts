@@ -16,7 +16,6 @@ export const API_CONFIG_XYT = {
     cancelOrderApi: `${BASE_URL_XYT}/hos/cancel/order`,
     getPayQrCodeApi: `${BASE_URL_XYT}/hos/pay/wechat/qrcode`,
     getPayResultApi: `${BASE_URL_XYT}/hos/pay/result`,
-    getOrderListApi: `${BASE_URL_XYT}/hos/order/list`,
 
     // user
     getPhoneCodeApi: `${BASE_URL_XYT}/user/phone/code`,
@@ -27,7 +26,8 @@ export const API_CONFIG_XYT = {
 
     getPatientsApi: `${BASE_URL_XYT}/user/patient/list`,
     getOrderStatesApi: `${BASE_URL_XYT}/user/order/states`,
-
+    getOrderListApi: `${BASE_URL_XYT}/user/order/list`,
+    
     addPatientApi: `${BASE_URL_XYT}/user/add/patient`,
     updatePatientApi: `${BASE_URL_XYT}/user/update/patient`,
     deletePatientApi: `${BASE_URL_XYT}/user/delete/patient`,

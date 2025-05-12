@@ -167,8 +167,6 @@ const getOrderInfo = async () => {
 };
 
 const getOrderState=(state:number)=>{
-    console.log(state);
-    
     switch (state) {
         case -1:
             return '订单已取消';
@@ -185,7 +183,7 @@ const getOrderState=(state:number)=>{
 const cancel = async () => {
     try {
         // 取消预约
-        await cancelOrder($route.query.orderId as string);
+        await cancelOrder(orderInfo?.value.orderId);
         //再次获取订单详情的数据
         getOrderInfo();
     } catch (error) {
