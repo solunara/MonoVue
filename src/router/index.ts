@@ -10,6 +10,7 @@ const pinia = createPinia()
 const userStore = useUserStore(pinia)
 
 let whiteList = <string[]>[
+    '/',
     '/home',
     '/xyt/xythome',
     '/xyt/hospital',

@@ -84,6 +84,7 @@ const goTo = (path:string, query?: Record<string, string>)=>{
             line-height: 30px;
             .login {
                 margin-left: 10px;
+                cursor: pointer;
             }
         }
     }

@@ -17,7 +17,7 @@
                     <!-- 地区子组件 -->
                     <HospitalRegion :cityName="cityName" @getDistrictCode="getDistrictCode"/>
                     <!-- 医院信息子组件 -->
-                    <div class="hostipalinfo" v-if="hospitalList && hospitalList.length>0">
+                    <div class="hostipalinfo" v-if="hospitalList && hospitalList.length>0" v-loading="loading">
                         <HospitalInfo class="hositem" v-for="item in hospitalList" :key="item.uid" :hospitalInfo="item" />
                     </div>
                     <div v-else>
@@ -60,6 +60,7 @@ import { onMounted, ref } from 'vue'
 import {getHospitalList} from '@/api/xyt/home/index'
 import type {HospitalType,HospitalListType} from '@/api/xyt/type'
 
+const loading = ref<boolean>(true)
 let cityName = ref<string>('北京市')
 let pageNo = ref<number>(1)
 let pageSize = ref<number>(10)
@@ -72,7 +73,9 @@ let gradeCode = ref<string>('')
 let districtCode = ref<string>('')
 
 onMounted(async ()=>{
+    loading.value=true;
     getHospitalData()
+    loading.value=false;
 })
 
 const getHospitalData = async ()=>{

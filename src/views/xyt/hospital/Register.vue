@@ -29,7 +29,7 @@
             </div>
         </div>
         <!-- 医院科室数据 -->
-         <div class="department">
+         <div class="department" v-loding="loading">
             <!-- 一级科室菜单 -->
             <div class="leftNav">
                 <ul>
@@ -53,13 +53,17 @@
 import { ref, onMounted } from 'vue';
 import {useHosDetailStore} from '@/store/xyt/index'
 import { useRoute,useRouter } from 'vue-router'
+
 const $route = useRoute();
 const $router = useRouter()
+const loading = ref<boolean>(true)
 let hosDetail = useHosDetailStore();
 let currentIndex = ref<number>(0);
 
 onMounted(()=>{
+    loading.value=true;
     hosDetail.getHospitalDepartment()
+    loading.value=false;
 })
 
 const changeIndex = (index:number)=>{

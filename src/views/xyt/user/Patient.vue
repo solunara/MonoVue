@@ -8,7 +8,7 @@
             </div>
         </template>
         <!-- 就诊人管理模块展示就诊人信息的结构 -->
-        <div class="visitors" v-if="scene == 0">
+        <div class="visitors" v-if="scene == 0" v-loading="loading">
             <Visitor
                 @changeScene="changeScene"
                 @removeUser="removeUser"
@@ -152,6 +152,7 @@ import { useRouter, useRoute } from "vue-router";
 let $route = useRoute();
 let $router = useRouter();
 
+const loading = ref<boolean>(true)
 //存储全部就诊人的信息
 let userArr = ref<Patient[]>([]);
 //定义一个响应式数据:决定卡片的身体部分的展示内容
@@ -194,10 +195,12 @@ onMounted(() => {
 
 //获取全部就诊人信息
 const getAllUser = async () => {
+    loading.value=true;
     const result: ResponsePatientsData = await getPatientData();
     if (result.code == 200) {
         userArr.value = result.data;
     }
+    loading.value=false;
 };
 
 //添加就诊人按钮的回调

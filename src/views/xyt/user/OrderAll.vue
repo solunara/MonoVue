@@ -27,7 +27,7 @@
             </el-form-item>
         </el-form>
         <!-- 表格展示订单的数据 -->
-        <el-table border style="margin: 10px 0px" :data="allOrderArr">
+        <el-table border style="margin: 10px 0px" :data="allOrderArr" v-loading="loading">
             <el-table-column label="就诊时间" prop="visitTime"></el-table-column>
             <el-table-column label="医院" prop="hosName"></el-table-column>
             <el-table-column label="科室" prop="deptName"></el-table-column>
@@ -74,7 +74,7 @@ import { useRouter } from "vue-router";
 
 //获取路由器对象
 let $router = useRouter();
-
+const loading = ref<boolean>(true)
 //当前分页器页码
 let pageNo = ref<number>(1);
 //当前页码展示几条数据
@@ -82,7 +82,7 @@ let pageSize = ref<number>(10);
 //收集就诊人的ID
 let patientId = ref<string>("");
 //订单的状态
-let orderStatus = ref<number>("");
+let orderStatus = ref<string>("");
 //存储全部的订单
 let allOrderArr = ref<OrderData[]>([]);
 //存储订单的总个数
@@ -94,10 +94,12 @@ let allOrderState = ref<OrderStatus[]>([]);
 
 //组件挂载完毕的钩子
 onMounted(() => {
+    loading.value=true;
     //获取订单的方法
     getOrderInfo();
     //获取全部就诊人的信息以及获取全部的订单的状态
     getData();
+    loading.value=false;
 });
 
 //获取订单的方法
@@ -105,7 +107,7 @@ const getOrderInfo = async (pager: number = 1) => {
     pageNo.value = pager;
     let result: ResponseOrderListType = await reqOrderList(
         patientId.value,
-        orderStatus.value,
+        Number(orderStatus.value),
         pageNo.value,
         pageSize.value,
     );

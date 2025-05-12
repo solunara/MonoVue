@@ -1,5 +1,6 @@
 <template>
-    <el-card class="box-card">
+    <div v-if="loading" v-loading="loading" ></div>
+    <el-card v-if="userInfo !== null" class="box-card" >
         <template #header>
             <div class="card-header">
                 <h3>实名信息</h3>
@@ -97,13 +98,15 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
 import type { UploadFile, UploadFiles, UploadProps } from 'element-plus'
-import {ref,reactive, onMounted} from 'vue'
+import {ref,reactive, onMounted } from 'vue'
 import { UserFilled, WarnTriangleFilled } from "@element-plus/icons-vue";
 import type {UserParams,UserInfo,ResponseUserInfo,CertificationReslt} from '@/api/xyt/type'
 import { reqUserInfo,reqUserCertation } from '@/api/xyt/user/user'
 
 let form = ref();
 let upload = ref();
+const loading = ref<boolean>(true)
+
 const fileList = ref<UploadFile[]>([])
 
 // 收集用户表单认证的数据
@@ -114,7 +117,7 @@ let params = reactive<UserParams>({
     image: "",
 });
 
-let userInfo = ref<UserInfo>()
+let userInfo = ref<UserInfo | null>(null)
 //控制对话框的显示与隐藏
 let dialogVisible = ref<boolean>(false);
 /** 预览图像 */
@@ -122,8 +125,10 @@ const previewImage = ref<string>('')
 
 //组件挂载完毕
 onMounted(() => {
+    loading.value = true;
     //获取用户信息的方法
     getUserInfo();
+    loading.value = false;
 });
 
 //获取用户信息方法
@@ -131,6 +136,8 @@ const getUserInfo = async () => {
     let result: ResponseUserInfo = await reqUserInfo();
     if (result.code == 200) {
         userInfo.value = result.data;
+    }else {
+        userInfo.value = null;
     }
 };
 
