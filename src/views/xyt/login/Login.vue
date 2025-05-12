@@ -81,6 +81,11 @@ import { ref, reactive, computed, watch } from 'vue'
 import type {ResponsePhoneCode,RequestLoginByPhone,ResponseLoginType,WXLoginResponseData} from '@/api/xyt/type'
 import {getPhoneCode,loginByPhoneCode,getWechatLoginParam} from '@/api/xyt/user/user'
 import Countdown from '@/components/xyt/Countdown.vue'
+import { useRoute, useRouter } from 'vue-router'
+
+
+const $route = useRoute();
+const $router = useRouter();
 
 enum LoginScene {
     Phone = 0,
@@ -192,6 +197,12 @@ const loginWithCode = async ()=>{
         loading.value=true
         userStore.setUserInfo(result.data);
         closeDialogCallback();
+        let redirect:string = ($route.query.redirect) as string
+        if(redirect){
+            $router.push(redirect)
+        }else{
+            $router.push('/xyt/xythome')
+        }
         ElMessage({
             type: 'success',
             message: ('登陆成功'),
@@ -199,7 +210,7 @@ const loginWithCode = async ()=>{
     }else{
         ElMessage({
             type: 'error',
-            message: ('出错了：' + result.msg),
+            message: ('登陆失败: ' + result.msg),
         });
     }
 }

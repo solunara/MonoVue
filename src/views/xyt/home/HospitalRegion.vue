@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, defineProps } from 'vue'
+import { onMounted, ref } from 'vue'
 import {getHospitalRegion} from '@/api/xyt/home/index'
 import type {HospitalRegionType,ResponseHospitalRegion} from '@/api/xyt/type'
 
@@ -23,7 +23,7 @@ let activedRegionFlag = ref<number>(0)
 let $emit = defineEmits(['getDistrictCode'])
 
 // 定义接收的 props 类型
-const props = defineProps<{
+let props = defineProps<{
     cityName: string
 }>()
 

@@ -136,7 +136,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
-import type { OrderData, ResponseOrderinfo, QrCode, PayReslt } from '@/api/xyt/type'
+import type { OrderData, ResponseOrderinfo, QrCode, PayReslt, ResponseData } from '@/api/xyt/type'
 import { getOrder } from '@/api/xyt/hospital/index'
 import { useRoute } from 'vue-router'
 import { cancelOrder } from '@/api/xyt/hospital/index'
@@ -167,8 +167,6 @@ const getOrderInfo = async () => {
 };
 
 const getOrderState=(state:number)=>{
-    console.log(state);
-    
     switch (state) {
         case -1:
             return '订单已取消';
@@ -183,15 +181,19 @@ const getOrderState=(state:number)=>{
 
 //取消订单   订单状态有三种 orderStatus  -1  取消预约  0 已预约但没有支付  1 支付成功 2 已完成
 const cancel = async () => {
-    try {
-        // 取消预约
-        await cancelOrder($route.query.orderId as string);
+    // 取消预约
+    let result:ResponseData = await cancelOrder(orderInfo?.value?.orderId ?? '');
+    if (result.code == 200){
+        ElMessage({
+            type: "success",
+            message: "取消成功",
+        });
         //再次获取订单详情的数据
         getOrderInfo();
-    } catch (error) {
+    }else{
         ElMessage({
             type: "error",
-            message: "取消预约失败",
+            message: "取消预约失败: "+result.msg,
         });
     }
 };

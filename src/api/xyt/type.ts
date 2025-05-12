@@ -123,7 +123,6 @@ export interface RequestLoginByPhone {
 // 验证码登录时的请求体类型
 export interface UserInfoType {
     name: string,
-    userId: string,
     token: string,
 }
 
@@ -240,6 +239,7 @@ export interface OrderData {
     id:           number,
     userId:       string,
 	orderId:      string,
+    scheId:       string,
 	patientId:    string,
 	hosID:        string,
 	deptID:       string,

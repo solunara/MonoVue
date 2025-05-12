@@ -6,7 +6,7 @@
             </div>
             <div class="right">
                 <p class="help">帮助信息</p>
-                <p class="login" @click="login" v-if="userStore.userInfo.name===''">登陆/注册</p>
+                <p class="login" @click="login" v-if="!userStore.userInfo.token">登陆/注册</p>
                 <el-dropdown class="login" v-else>
                     <span class="el-dropdown-link">
                         {{ userStore.userInfo.name }}
@@ -84,6 +84,7 @@ const goTo = (path:string, query?: Record<string, string>)=>{
             line-height: 30px;
             .login {
                 margin-left: 10px;
+                cursor: pointer;
             }
         }
     }
