@@ -78,7 +78,7 @@ export const getOrderStates = () => request.get<any, ResponseOrderStatus>(
     API_CONFIG_XYT.getOrderStatesApi)
 
 // 取消预约挂号
-export const cancelOrder = (orderId:string) => request.post<any, ResponseOrderinfo>(
+export const cancelOrder = (orderId:string) => request.post<any, ResponseData>(
     API_CONFIG_XYT.cancelOrderApi,{
         orderId: orderId,
     })

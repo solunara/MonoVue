@@ -49,7 +49,12 @@ router.beforeEach(
         }else{
             if(!whiteList.includes(to.path)){
                 userStore.loginVisiabe=true;
-                next('/xyt/xythome')
+                next({ 
+                    path: '/xyt/xythome', 
+                    query: {
+                        redirect: to.fullPath,
+                    }
+                })
             }
         }
         if (to.path.startsWith('/xyt')) {

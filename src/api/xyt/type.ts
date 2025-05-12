@@ -239,6 +239,7 @@ export interface OrderData {
     id:           number,
     userId:       string,
 	orderId:      string,
+    scheId:       string,
 	patientId:    string,
 	hosID:        string,
 	deptID:       string,
