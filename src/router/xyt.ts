@@ -52,42 +52,12 @@ export const routes_xyt = [
                         name: 'register2',
                         meta: {title: '预约挂号'},
                         component: () => import('@/views/xyt/hospital/RegisterTwo.vue'),
-                        beforeEnter(to:any, from:any, next:any){
-                            const tokenStr = GET_XYT_TOKEN()
-                            if (tokenStr==null || tokenStr==''){
-                                next('/xyt/hospital/register?hosId='+from.query.hosId)
-                                useUserStore().loginVisiabe=true
-                                return
-                            }
-                            const userInfoType =  JSON.parse(tokenStr as string) as UserInfoType
-                            if (userInfoType == null || userInfoType.name == ''){
-                                next('/xyt/hospital/register?hosId='+from.query.hosId)
-                                useUserStore().loginVisiabe=true
-                                return
-                            }
-                            next()
-                        }
                     },
                     {
                         path: 'register3',
                         name: 'register3',
                         meta: {title: '预约挂号'},
                         component: () => import('@/views/xyt/hospital/RegisterThree.vue'),
-                        beforeEnter(to:any, from:any, next:any){
-                            const tokenStr = GET_XYT_TOKEN()
-                            if (tokenStr==null || tokenStr==''){
-                                next('/xyt/hospital/register?hosId='+from.query.hosId+'&deptId='+from.query.deptId)
-                                useUserStore().loginVisiabe=true
-                                return
-                            }
-                            const userInfoType =  JSON.parse(tokenStr as string) as UserInfoType
-                            if (userInfoType == null || userInfoType.name == ''){
-                                next('/xyt/hospital/register?hosId='+from.query.hosId+'&deptId='+from.query.deptId)
-                                useUserStore().loginVisiabe=true
-                                return
-                            }
-                            next()
-                        }
                     },
                 ]
             },

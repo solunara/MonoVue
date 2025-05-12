@@ -20,6 +20,7 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@types/nprogress": "^0.2.3",
     "@vitejs/plugin-vue": "^5.2.2",
     "@vue/tsconfig": "^0.7.0",
     "sass-embedded": "^1.87.0",
