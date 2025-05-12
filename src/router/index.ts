@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { routes_xyt } from './xyt'
 import Nprogress from 'nprogress'
 import  'nprogress/nprogress.css'
+import { APP_CONFIG } from '@/config/app'
 
 Nprogress.configure({ showSpinner: false })
 
@@ -28,6 +29,9 @@ const router = createRouter({
 router.beforeEach(
     (to: any, from: any, next: any)=>{
         Nprogress.start()
+        if (to.path.startsWith('/xyt')) {
+            document.title = APP_CONFIG.APP_TITLE_XYT_PREFIX+to.meta.title
+        }
         next()
     }
 );
