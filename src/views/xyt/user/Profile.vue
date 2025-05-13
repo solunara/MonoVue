@@ -1,13 +1,7 @@
 <template>
-    <div>
-        账号信息
-    </div>
+  <div>账号信息</div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>
